@@ -23,8 +23,6 @@ function toCard(property: PropertyDoc): PropertyCard {
     imageUrl: property.images?.[0] ? urlFor(property.images[0]).width(800).height(600).url() : undefined,
     categoryLabel: property.brand?.name,
     location: [property.location?.city, property.location?.region].filter(Boolean).join(", "),
-    price: property.price,
-    priceOnRequest: property.priceOnRequest,
     status: property.status,
     specsSummary: specsParts.join(" · ") || undefined,
   };

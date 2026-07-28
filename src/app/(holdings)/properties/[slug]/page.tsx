@@ -10,13 +10,6 @@ import { PortableText } from "@/components/portable-text/PortableText";
 import { InquiryForm } from "@/components/marketing/InquiryForm";
 import type { PropertyDoc } from "@/types/sanity";
 
-function formatPrice(price?: number, priceOnRequest?: boolean) {
-  if (priceOnRequest || price === undefined) return "Contact for price";
-  return new Intl.NumberFormat("en-GH", { style: "currency", currency: "GHS", maximumFractionDigits: 0 }).format(
-    price,
-  );
-}
-
 export default async function PropertyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const property = await safeFetch<PropertyDoc & { description?: unknown }>(
@@ -51,9 +44,6 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
           <h1 className="mt-4 text-3xl font-semibold tracking-tight text-brand-ink">{property.title}</h1>
           <p className="mt-2 text-brand-ink/60">
             {[property.location?.city, property.location?.region].filter(Boolean).join(", ")}
-          </p>
-          <p className="mt-4 text-2xl font-semibold text-brand-primary">
-            {formatPrice(property.price, property.priceOnRequest)}
           </p>
 
           {property.specs && (

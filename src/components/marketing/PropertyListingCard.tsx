@@ -9,18 +9,9 @@ export type PropertyCard = {
   imageUrl?: string;
   categoryLabel?: string;
   location?: string;
-  price?: number;
-  priceOnRequest?: boolean;
   status: "available" | "reserved" | "sold";
   specsSummary?: string;
 };
-
-function formatPrice(price?: number, priceOnRequest?: boolean) {
-  if (priceOnRequest || price === undefined) return "Contact for price";
-  return new Intl.NumberFormat("en-GH", { style: "currency", currency: "GHS", maximumFractionDigits: 0 }).format(
-    price,
-  );
-}
 
 export function PropertyListingCard({ property }: { property: PropertyCard }) {
   return (
@@ -54,9 +45,6 @@ export function PropertyListingCard({ property }: { property: PropertyCard }) {
         <p className="text-lg font-semibold text-brand-ink">{property.title}</p>
         {property.location && <p className="mt-1 text-sm text-brand-ink/60">{property.location}</p>}
         {property.specsSummary && <p className="mt-2 text-sm text-brand-ink/60">{property.specsSummary}</p>}
-        <p className="mt-3 text-base font-semibold text-brand-primary">
-          {formatPrice(property.price, property.priceOnRequest)}
-        </p>
       </div>
     </Link>
   );

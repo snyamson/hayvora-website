@@ -13,17 +13,8 @@ export type CarouselProperty = {
   title: string;
   imageUrl?: string;
   location?: string;
-  price?: number;
-  priceOnRequest?: boolean;
   status: "available" | "reserved" | "sold";
 };
-
-function formatPrice(price?: number, priceOnRequest?: boolean) {
-  if (priceOnRequest || price === undefined) return "Contact for price";
-  return new Intl.NumberFormat("en-GH", { style: "currency", currency: "GHS", maximumFractionDigits: 0 }).format(
-    price,
-  );
-}
 
 export function PropertiesCarousel({ properties }: { properties: CarouselProperty[] }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: "start" }, [
@@ -79,9 +70,6 @@ export function PropertiesCarousel({ properties }: { properties: CarouselPropert
                 <div className="absolute inset-x-0 bottom-0 p-6">
                   <p className="font-display text-xl font-bold text-white sm:text-2xl">{property.title}</p>
                   {property.location && <p className="mt-1 text-sm text-white/80">{property.location}</p>}
-                  <p className="mt-2 text-sm font-semibold text-white/90">
-                    {formatPrice(property.price, property.priceOnRequest)}
-                  </p>
                 </div>
               </div>
             </Link>

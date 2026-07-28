@@ -178,8 +178,6 @@ export default async function HoldingsHomePage() {
                 title: p.title,
                 imageUrl: p.images?.[0] ? urlFor(p.images[0]).width(800).height(600).url() : undefined,
                 location: [p.location?.city, p.location?.region].filter(Boolean).join(", "),
-                price: p.price,
-                priceOnRequest: p.priceOnRequest,
                 status: p.status,
               }))}
             />
