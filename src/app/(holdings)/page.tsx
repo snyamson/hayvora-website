@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { FramedMedia } from "@/components/ui/FramedMedia";
+import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { HeroCarousel } from "@/components/marketing/HeroCarousel";
 import { StatsRow } from "@/components/marketing/StatsRow";
@@ -49,10 +50,10 @@ export default async function HoldingsHomePage() {
       <section className="py-24">
         <Container className="grid grid-cols-1 gap-16 lg:grid-cols-2">
           <SectionHeading eyebrow="Our Mission" title={resolvedBrand.tagline ?? resolvedBrand.name} />
-          <div className="flex flex-col justify-between gap-10">
+          <Reveal delay={0.1} className="flex flex-col justify-between gap-10">
             <p className="max-w-xl text-lg leading-relaxed text-brand-ink/70">{resolvedBrand.shortDescription}</p>
             {resolvedBrand.stats && <StatsRow stats={resolvedBrand.stats} />}
-          </div>
+          </Reveal>
         </Container>
       </section>
 
@@ -70,7 +71,7 @@ export default async function HoldingsHomePage() {
               const reversed = i % 2 === 1;
 
               return (
-                <div
+                <Reveal
                   key={sub.slug.current}
                   className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16"
                 >
@@ -93,7 +94,7 @@ export default async function HoldingsHomePage() {
                       className="aspect-[4/3] w-full max-w-md"
                     />
                   </div>
-                </div>
+                </Reveal>
               );
             })}
           </div>
@@ -114,13 +115,13 @@ export default async function HoldingsHomePage() {
         )}
 
         <Container className="relative flex justify-center px-6 py-20">
-          <div className="max-w-2xl border-2 border-brand-primary bg-white/90 p-10 text-center backdrop-blur-sm sm:p-14">
+          <Reveal className="max-w-2xl border-2 border-brand-primary bg-white/90 p-10 text-center backdrop-blur-sm sm:p-14">
             <p className="font-display text-2xl leading-snug font-bold tracking-tight text-brand-ink sm:text-3xl">
               One holding company. Three specialist divisions.{" "}
               <span className="text-brand-accent">One point of contact</span> for every project, from ground survey
               to final handover.
             </p>
-          </div>
+          </Reveal>
         </Container>
       </section>
 
@@ -128,9 +129,9 @@ export default async function HoldingsHomePage() {
       <section className="py-24">
         <Container>
           <SectionHeading eyebrow="How We Work" title="Our process" />
-          <div className="mt-14">
+          <Reveal delay={0.1} className="mt-14">
             <ProcessSteps steps={resolvedBrand.process ?? []} />
-          </div>
+          </Reveal>
         </Container>
       </section>
 
@@ -138,7 +139,7 @@ export default async function HoldingsHomePage() {
       <section className="bg-brand-surface py-24">
         <Container>
           <SectionHeading eyebrow="Selected Work" title="Featured projects" />
-          <div className="mt-14">
+          <Reveal delay={0.1} className="mt-14">
             <FeaturedProjectsBento
               projects={(featuredProjects ?? []).map((p) => ({
                 slug: p.slug.current,
@@ -157,7 +158,7 @@ export default async function HoldingsHomePage() {
                 })),
               }))}
             />
-          </div>
+          </Reveal>
         </Container>
       </section>
 
@@ -170,7 +171,7 @@ export default async function HoldingsHomePage() {
             title="Explore available properties across all our companies"
           />
 
-          <div className="mt-14">
+          <Reveal delay={0.1} className="mt-14">
             <PropertiesCarousel
               properties={(latestProperties ?? []).map((p) => ({
                 slug: p.slug.current,
@@ -182,7 +183,7 @@ export default async function HoldingsHomePage() {
                 status: p.status,
               }))}
             />
-          </div>
+          </Reveal>
 
           <div className="mt-12 flex justify-center">
             <Button href="/properties" variant="secondary" uppercase={false}>

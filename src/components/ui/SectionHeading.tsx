@@ -1,3 +1,5 @@
+import { Reveal } from "@/components/ui/Reveal";
+
 export function SectionHeading({
   eyebrow,
   title,
@@ -15,7 +17,7 @@ export function SectionHeading({
   const descriptionColor = theme === "dark" ? "text-white/70" : "text-brand-ink/70";
 
   return (
-    <div className={align === "center" ? "text-center" : "text-left"}>
+    <Reveal className={align === "center" ? "text-center" : "text-left"}>
       {eyebrow && (
         <p className="mb-3 font-display text-sm font-bold tracking-[0.25em] text-brand-secondary uppercase">
           {eyebrow}
@@ -28,6 +30,6 @@ export function SectionHeading({
         </p>
       )}
       <div className={`mt-6 h-1 w-16 bg-brand-secondary ${align === "center" ? "mx-auto" : ""}`} />
-    </div>
+    </Reveal>
   );
 }

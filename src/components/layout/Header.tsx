@@ -11,8 +11,6 @@ export function Header({
   homeHref,
   logoUrl,
   navItems,
-  parentLinkLabel,
-  parentLinkHref,
   ctaLabel = "Contact Us",
   ctaHref,
 }: {
@@ -20,12 +18,11 @@ export function Header({
   homeHref: string;
   logoUrl?: string;
   navItems: NavItem[];
-  parentLinkLabel?: string;
-  parentLinkHref?: string;
   ctaLabel?: string;
   ctaHref: string;
 }) {
   const [shrink, setShrink] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     let lastY = window.scrollY;
@@ -46,6 +43,19 @@ export function Header({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
   return (
     <header className="fixed inset-x-0 top-4 z-30 px-4">
       <div
@@ -53,7 +63,7 @@ export function Header({
           shrink ? "max-w-3xl" : "max-w-6xl"
         }`}
       >
-        <Link href={homeHref} className="flex shrink-0 items-center gap-2.5">
+        <Link href={homeHref} className="flex shrink-0 items-center gap-2.5" onClick={() => setMenuOpen(false)}>
           {logoUrl ? (
             <Image src={logoUrl} alt={brandName} width={36} height={36} className="h-9 w-9" />
           ) : (
@@ -73,23 +83,55 @@ export function Header({
               {item.label}
             </Link>
           ))}
-          {parentLinkHref && (
-            <Link
-              href={parentLinkHref}
-              className="text-xs font-semibold tracking-wide text-brand-primary/50 uppercase transition hover:text-brand-primary"
-            >
-              {parentLinkLabel ?? "Part of Hayvora Holdings"}
-            </Link>
-          )}
         </nav>
 
         <Link
           href={ctaHref}
-          className="font-display shrink-0 rounded-full bg-brand-secondary px-6 py-2.5 text-sm font-bold text-white transition hover:opacity-90"
+          className="font-display hidden shrink-0 rounded-full bg-brand-secondary px-6 py-2.5 text-sm font-bold text-white transition hover:opacity-90 sm:block"
         >
           {ctaLabel}
         </Link>
+
+        <button
+          type="button"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((open) => !open)}
+          className="flex h-9 w-9 shrink-0 flex-col items-center justify-center gap-1.5 md:hidden"
+        >
+          <span
+            className={`block h-0.5 w-5 bg-brand-primary transition-transform duration-300 ${menuOpen ? "translate-y-2 rotate-45" : ""}`}
+          />
+          <span className={`block h-0.5 w-5 bg-brand-primary transition-opacity duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+          <span
+            className={`block h-0.5 w-5 bg-brand-primary transition-transform duration-300 ${menuOpen ? "-translate-y-2 -rotate-45" : ""}`}
+          />
+        </button>
       </div>
+
+      {menuOpen && (
+        <div className="mx-auto mt-3 max-w-6xl rounded-3xl bg-white p-6 shadow-lg shadow-brand-primary/15 md:hidden">
+          <nav className="flex flex-col gap-1">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setMenuOpen(false)}
+                className="rounded-lg px-3 py-3 text-base font-semibold text-brand-primary/80 transition hover:bg-brand-surface hover:text-brand-primary"
+              >
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+          <Link
+            href={ctaHref}
+            onClick={() => setMenuOpen(false)}
+            className="font-display mt-4 block rounded-full bg-brand-secondary px-6 py-3 text-center text-sm font-bold text-white transition hover:opacity-90"
+          >
+            {ctaLabel}
+          </Link>
+        </div>
+      )}
     </header>
   );
 }

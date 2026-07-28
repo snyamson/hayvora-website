@@ -4,7 +4,9 @@ import { safeFetch } from "../../../sanity/lib/client";
 import { BRAND_BY_SLUG_QUERY, SITE_SETTINGS_QUERY } from "../../../sanity/lib/queries";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { PageTransition } from "@/components/PageTransition";
 import { getBrandThemeStyle, getLogoUrl } from "@/lib/brandHelpers";
+import { GLOBAL_NAV_ITEMS } from "@/lib/brands";
 import { FALLBACK_BRANDS, FALLBACK_SITE_SETTINGS } from "@/lib/fallbackContent";
 import type { BrandDoc, SiteSettingsDoc } from "@/types/sanity";
 
@@ -17,30 +19,24 @@ export default async function HoldingsLayout({ children }: { children: ReactNode
   const resolvedBrand = brand ?? FALLBACK_BRANDS.holdings;
   const resolvedSiteSettings = siteSettings ?? FALLBACK_SITE_SETTINGS;
 
-  const navItems = [
-    { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
-    { label: "Divisions", href: "/#divisions" },
-    { label: "Properties", href: "/properties" },
-    { label: "Contact", href: "/contact" },
-  ];
-
   return (
     <div style={getBrandThemeStyle(resolvedBrand)}>
       <Header
         brandName={resolvedBrand.name}
         homeHref="/"
         logoUrl={getLogoUrl(resolvedBrand, "primary")}
-        navItems={navItems.filter((item) => item.label !== "Contact")}
+        navItems={GLOBAL_NAV_ITEMS}
         ctaLabel="Contact Us"
         ctaHref="/contact"
       />
-      <main>{children}</main>
+      <main>
+        <PageTransition>{children}</PageTransition>
+      </main>
       <Footer
         brandName={resolvedBrand.name}
         logoUrl={getLogoUrl(resolvedBrand, "primary")}
         footerText={resolvedSiteSettings.footerText}
-        links={navItems}
+        links={[...GLOBAL_NAV_ITEMS, { label: "Contact", href: "/contact" }]}
         email={resolvedSiteSettings.contactInfo?.email}
         phone={resolvedSiteSettings.contactInfo?.phone}
         socialLinks={resolvedSiteSettings.socialLinks}
