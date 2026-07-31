@@ -17,7 +17,7 @@ export function PropertyListingCard({ property }: { property: PropertyCard }) {
   return (
     <Link
       href={`/properties/${property.slug}`}
-      className="group block overflow-hidden rounded-2xl border border-black/5 bg-white shadow-sm transition hover:shadow-lg"
+      className="group block overflow-hidden rounded-card border border-black/5 bg-white shadow-sm transition hover:shadow-lg"
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden">
         {property.imageUrl ? (

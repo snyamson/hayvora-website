@@ -11,23 +11,27 @@ const VARIANT_STYLES: Record<Variant, string> = {
 };
 
 const baseStyles =
-  "font-display inline-flex items-center justify-center gap-2 rounded-sm px-7 py-3.5 text-sm font-bold tracking-wide transition";
+  "font-display inline-flex items-center justify-center gap-2 px-7 py-3.5 text-sm font-bold tracking-wide transition";
 
 export function Button({
   children,
   variant = "primary",
   href,
-  uppercase = true,
+  pill = false,
   className = "",
   ...props
 }: {
   children: ReactNode;
   variant?: Variant;
   href?: string;
-  uppercase?: boolean;
+  /** Fully rounded instead of the default slight radius. Set here rather than via
+   *  `className` because both set border-radius, and which one wins depends on
+   *  Tailwind's generated rule order, not the order of the class attribute. */
+  pill?: boolean;
   className?: string;
 } & ButtonHTMLAttributes<HTMLButtonElement>) {
-  const classes = `${baseStyles} ${uppercase ? "uppercase" : ""} ${VARIANT_STYLES[variant]} ${className}`;
+  // Buttons render their label as written — no uppercase transform anywhere on the site.
+  const classes = `${baseStyles} ${pill ? "rounded-full" : "rounded-control"} ${VARIANT_STYLES[variant]} ${className}`;
 
   if (href) {
     return (

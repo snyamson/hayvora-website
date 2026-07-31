@@ -6,6 +6,21 @@ import { Container } from "@/components/ui/Container";
 import { PortableText } from "@/components/portable-text/PortableText";
 import { isSubsidiarySlug } from "@/lib/brands";
 import type { ServiceDoc } from "@/types/sanity";
+import { buildMetadata } from "@/lib/seo";
+
+export async function generateMetadata({ params }: { params: Promise<{ brand: string; slug: string }> }) {
+  const { brand: brandSlug, slug } = await params;
+  if (!isSubsidiarySlug(brandSlug)) return {};
+
+  const service = await safeFetch<ServiceDoc>(SERVICE_BY_SLUG_QUERY, { slug }, ["service", `service:${slug}`]);
+  if (!service) return { title: "Service not found" };
+
+  return buildMetadata({
+    title: service.title,
+    description: service.shortDescription,
+    path: `/${brandSlug}/services/${slug}`,
+  });
+}
 
 export default async function ServiceDetailPage({
   params,

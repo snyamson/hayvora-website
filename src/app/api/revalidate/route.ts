@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 /**
  * Target for a Sanity webhook (Settings -> API -> Webhooks) configured to fire on
  * create/update/delete for project, property, brand, siteSettings, service, testimonial,
- * teamMember. Configure the webhook to send header `x-webhook-secret: <SANITY_REVALIDATE_SECRET>`
+ * teamMember, client. Configure the webhook to send header `x-webhook-secret: <SANITY_REVALIDATE_SECRET>`
  * and a JSON body containing at least `_type` and `slug`.
  */
 export async function POST(request: Request) {

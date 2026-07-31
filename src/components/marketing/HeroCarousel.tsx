@@ -11,13 +11,11 @@ export type HeroSlide = { type: "image"; imageUrl: string; alt?: string } | { ty
 
 export function HeroCarousel({
   headline,
-  subheadline,
   slides,
   ctaLabel,
   ctaHref,
 }: {
   headline: string;
-  subheadline?: string;
   slides: HeroSlide[];
   ctaLabel?: string;
   ctaHref?: string;
@@ -74,19 +72,16 @@ export function HeroCarousel({
       </div>
 
       <div className="absolute inset-0 flex items-center">
-        <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">
-          <div className="max-w-3xl border-2 border-brand-highlight py-8 pr-6 pl-8 sm:py-10 sm:pr-10 sm:pl-12">
-            <h1 className="font-display text-4xl leading-[0.95] font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              {headline}
-            </h1>
-            {subheadline && (
-              <p className="font-display mt-5 max-w-xl text-lg font-bold italic text-brand-highlight sm:text-xl">
-                {subheadline}
-              </p>
-            )}
-          </div>
+        {/* Top padding on a vertically centred block pushes the copy down, opening up
+            breathing room above the headline. */}
+        <div className="mx-auto w-full max-w-7xl px-6 pt-32 sm:pt-36 lg:px-8 lg:pt-40">
+          {/* Semibold, not bold: Montserrat's 700 is a very heavy cut and turns into a
+              slab of black at hero sizes. 600 keeps the presence without the weight. */}
+          <h1 className="font-display max-w-4xl text-4xl leading-[1] font-semibold tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl">
+            {headline}
+          </h1>
           {ctaLabel && ctaHref && (
-            <div className="mt-10 pl-8 sm:pl-12">
+            <div className="mt-10">
               <Button href={ctaHref} variant="secondary">
                 {ctaLabel}
               </Button>
@@ -95,8 +90,9 @@ export function HeroCarousel({
         </div>
       </div>
 
+      {/* Dots sit left, lifted on mobile, so the bottom-right statement card never covers them. */}
       {displaySlides.length > 1 && (
-        <div className="absolute bottom-8 right-8 flex gap-2">
+        <div className="absolute bottom-20 left-6 flex gap-2 sm:bottom-8 sm:left-8">
           {displaySlides.map((_, i) => (
             <button
               key={i}

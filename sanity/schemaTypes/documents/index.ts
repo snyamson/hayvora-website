@@ -6,3 +6,5 @@ export { inquiry } from "./inquiry";
 export { testimonial } from "./testimonial";
 export { teamMember } from "./teamMember";
 export { service } from "./service";
+export { client } from "./client";
+export { homeGallery } from "./homeGallery";

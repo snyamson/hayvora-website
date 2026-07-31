@@ -110,14 +110,14 @@ export function Header({
       </div>
 
       {menuOpen && (
-        <div className="mx-auto mt-3 max-w-6xl rounded-3xl bg-white p-6 shadow-lg shadow-brand-primary/15 md:hidden">
+        <div className="mx-auto mt-3 max-w-6xl rounded-card bg-white p-6 shadow-lg shadow-brand-primary/15 md:hidden">
           <nav className="flex flex-col gap-1">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
-                className="rounded-lg px-3 py-3 text-base font-semibold text-brand-primary/80 transition hover:bg-brand-surface hover:text-brand-primary"
+                className="rounded-control px-3 py-3 text-base font-semibold text-brand-primary/80 transition hover:bg-brand-surface hover:text-brand-primary"
               >
                 {item.label}
               </Link>

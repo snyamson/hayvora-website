@@ -5,9 +5,11 @@ import { BRAND_BY_SLUG_QUERY, SITE_SETTINGS_QUERY } from "../../../sanity/lib/qu
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { PageTransition } from "@/components/PageTransition";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { getBrandThemeStyle, getLogoUrl } from "@/lib/brandHelpers";
-import { GLOBAL_NAV_ITEMS } from "@/lib/brands";
+import { GLOBAL_NAV_ITEMS, SUBSIDIARY_SLUGS } from "@/lib/brands";
 import { FALLBACK_BRANDS, FALLBACK_SITE_SETTINGS } from "@/lib/fallbackContent";
+import { organizationSchema } from "@/lib/structuredData";
 import type { BrandDoc, SiteSettingsDoc } from "@/types/sanity";
 
 export default async function HoldingsLayout({ children }: { children: ReactNode }) {
@@ -21,6 +23,12 @@ export default async function HoldingsLayout({ children }: { children: ReactNode
 
   return (
     <div style={getBrandThemeStyle(resolvedBrand)}>
+      <JsonLd
+        data={organizationSchema(
+          siteSettings ?? undefined,
+          SUBSIDIARY_SLUGS.map((slug) => ({ name: FALLBACK_BRANDS[slug].name, slug })),
+        )}
+      />
       <Header
         brandName={resolvedBrand.name}
         homeHref="/"

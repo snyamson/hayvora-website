@@ -50,7 +50,7 @@ export function PropertiesCarousel({ properties }: { properties: CarouselPropert
               href={`/properties/${property.slug}`}
               className="group relative block min-w-0 flex-[0_0_85%] pl-6 sm:flex-[0_0_60%] lg:flex-[0_0_42%]"
             >
-              <div className="relative aspect-[4/3] w-full overflow-hidden">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-card">
                 {property.imageUrl ? (
                   <Image
                     src={property.imageUrl}

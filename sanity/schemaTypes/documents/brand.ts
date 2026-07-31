@@ -50,6 +50,7 @@ export const brand = defineType({
       ],
     }),
     defineField({ name: "hero", title: "Homepage hero", type: "heroContent" }),
+    defineField({ name: "whyChoose", title: "Why Choose section", type: "whyChooseContent" }),
     defineField({
       name: "narrativeImage",
       title: "Narrative statement background photo",

@@ -12,6 +12,25 @@ export const ALL_SUBSIDIARY_BRANDS_QUERY = defineQuery(`
   *[_type == "brand" && isParent != true] | order(orderRank asc)
 `);
 
+export const ALL_CLIENTS_QUERY = defineQuery(`
+  *[_type == "client"] | order(orderRank asc)
+`);
+
+export const HOME_GALLERY_QUERY = defineQuery(`
+  *[_type == "homeGallery"][0]
+`);
+
+/** Every project's gallery (plus its cover as a fallback) for the homepage gallery pool. */
+export const PROJECT_GALLERY_POOL_QUERY = defineQuery(`
+  *[_type == "project"] | order(orderRank asc){
+    title,
+    slug,
+    coverImage,
+    gallery,
+    "brandSlug": brand->slug.current
+  }
+`);
+
 export const FEATURED_PROJECTS_BY_BRAND_QUERY = defineQuery(`
   *[_type == "project" && brand->slug.current == $slug && featured == true]
     | order(orderRank asc)

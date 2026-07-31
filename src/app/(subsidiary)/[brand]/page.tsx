@@ -6,11 +6,28 @@ import { urlFor } from "../../../../sanity/lib/image";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { HeroCarousel } from "@/components/marketing/HeroCarousel";
+import { HeroStatementCard } from "@/components/marketing/HeroStatementCard";
 import { ProjectGalleryGrid, type ProjectCard } from "@/components/marketing/ProjectGalleryGrid";
 import { getHeroSlides } from "@/lib/brandHelpers";
 import { isSubsidiarySlug } from "@/lib/brands";
 import { FALLBACK_BRANDS } from "@/lib/fallbackContent";
 import type { BrandDoc, ProjectDoc } from "@/types/sanity";
+import { buildMetadata } from "@/lib/seo";
+
+export async function generateMetadata({ params }: { params: Promise<{ brand: string }> }) {
+  const { brand: brandSlug } = await params;
+  if (!isSubsidiarySlug(brandSlug)) return {};
+
+  const brand = await safeFetch<BrandDoc>(BRAND_BY_SLUG_QUERY, { slug: brandSlug }, ["brand", `brand:${brandSlug}`]);
+  const resolved = brand ?? FALLBACK_BRANDS[brandSlug];
+
+  return buildMetadata({
+    title: `${resolved.name} — ${resolved.tagline ?? "Hayvora Holdings"}`,
+    description: resolved.shortDescription,
+    path: `/${brandSlug}`,
+    seo: resolved.seo,
+  });
+}
 
 export default async function SubsidiaryHomePage({ params }: { params: Promise<{ brand: string }> }) {
   const { brand: brandSlug } = await params;
@@ -37,15 +54,19 @@ export default async function SubsidiaryHomePage({ params }: { params: Promise<{
     <>
       <HeroCarousel
         headline={resolvedBrand.hero?.headline ?? resolvedBrand.tagline ?? resolvedBrand.name}
-        subheadline={resolvedBrand.hero?.subheadline}
         slides={getHeroSlides(resolvedBrand)}
         ctaLabel={resolvedBrand.hero?.ctaLabel ?? (modules.has("projects") ? "Our Projects" : undefined)}
         ctaHref={resolvedBrand.hero?.ctaHref ?? (modules.has("projects") ? `/${brandSlug}/projects` : undefined)}
       />
 
-      <section className="py-24">
+      {resolvedBrand.hero?.subheadline && (
+        <HeroStatementCard eyebrow="What We Do" text={resolvedBrand.hero.subheadline} />
+      )}
+
+      {/* No description here — the hero card above already carries the brand summary. */}
+      <section className="pt-16 pb-24">
         <Container>
-          <SectionHeading eyebrow="Overview" title={resolvedBrand.name} description={resolvedBrand.shortDescription} />
+          <SectionHeading eyebrow="Overview" title={resolvedBrand.name} />
         </Container>
       </section>
 

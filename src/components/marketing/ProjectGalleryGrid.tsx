@@ -25,7 +25,7 @@ export function ProjectGalleryGrid({ projects }: { projects: ProjectCard[] }) {
         <Link
           key={project.slug}
           href={project.href}
-          className={`group relative block overflow-hidden rounded-2xl bg-brand-surface ${
+          className={`group relative block overflow-hidden rounded-card bg-brand-surface ${
             i % 5 === 0 ? "sm:col-span-2 sm:row-span-2" : ""
           }`}
         >

@@ -6,7 +6,7 @@ import { urlFor } from "../../../sanity/lib/image";
 const components: PortableTextComponents = {
   types: {
     image: ({ value }) => (
-      <span className="relative my-6 block aspect-video w-full overflow-hidden rounded-xl">
+      <span className="relative my-6 block aspect-video w-full overflow-hidden rounded-card">
         <Image src={urlFor(value).width(1200).url()} alt={value.alt ?? ""} fill className="object-cover" />
       </span>
     ),

@@ -25,7 +25,7 @@ export default async function SubsidiaryGalleryPage({ params }: { params: Promis
         {images.length > 0 ? (
           <div className="mt-10 columns-2 gap-4 sm:columns-3">
             {images.map((img, i) => (
-              <div key={i} className="relative mb-4 aspect-square w-full overflow-hidden rounded-lg break-inside-avoid">
+              <div key={i} className="relative mb-4 aspect-square w-full overflow-hidden rounded-card break-inside-avoid">
                 <Image src={urlFor(img).width(600).height(600).url()} alt="" fill className="object-cover" />
               </div>
             ))}

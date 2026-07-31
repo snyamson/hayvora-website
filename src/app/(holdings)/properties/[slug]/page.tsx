@@ -9,6 +9,25 @@ import { StatusBadge } from "@/components/ui/Badge";
 import { PortableText } from "@/components/portable-text/PortableText";
 import { InquiryForm } from "@/components/marketing/InquiryForm";
 import type { PropertyDoc } from "@/types/sanity";
+import { buildMetadata, ogImageUrl } from "@/lib/seo";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const property = await safeFetch<PropertyDoc>(PROPERTY_BY_SLUG_QUERY, { slug }, ["property", `property:${slug}`]);
+  if (!property) return { title: "Property not found" };
+
+  const where = [property.location?.city, property.location?.region].filter(Boolean).join(", ");
+
+  return buildMetadata({
+    title: where ? `${property.title} — ${where}` : property.title,
+    description: `${property.title}${where ? ` in ${where}` : ""}. ${
+      property.status === "available" ? "Currently available" : `Status: ${property.status}`
+    } through Hayvora Holdings.`,
+    path: `/properties/${slug}`,
+    image: ogImageUrl(property.images?.[0]),
+    type: "article",
+  });
+}
 
 export default async function PropertyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -27,7 +46,7 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
       <Container className="grid grid-cols-1 gap-12 lg:grid-cols-3">
         <div className="lg:col-span-2">
           {coverImage && (
-            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl">
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-card">
               <Image src={urlFor(coverImage).width(1200).height(900).url()} alt={property.title} fill className="object-cover" />
             </div>
           )}
@@ -58,7 +77,7 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
           {property.images && property.images.length > 1 && (
             <div className="mt-8 grid grid-cols-3 gap-3">
               {property.images.slice(1).map((img, i) => (
-                <div key={i} className="relative aspect-square overflow-hidden rounded-lg">
+                <div key={i} className="relative aspect-square overflow-hidden rounded-card">
                   <Image src={urlFor(img).width(400).height(400).url()} alt="" fill className="object-cover" />
                 </div>
               ))}
@@ -71,7 +90,7 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
         </div>
 
         <div>
-          <div className="sticky top-32 rounded-2xl border border-black/5 bg-white p-6 shadow-sm">
+          <div className="sticky top-32 rounded-card border border-black/5 bg-white p-6 shadow-sm">
             {property.status === "sold" ? (
               <p className="text-brand-ink/70">This property has been sold.</p>
             ) : (

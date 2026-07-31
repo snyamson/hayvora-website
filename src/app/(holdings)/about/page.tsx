@@ -5,6 +5,14 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { PortableText } from "@/components/portable-text/PortableText";
 import { FALLBACK_BRANDS } from "@/lib/fallbackContent";
 import type { BrandDoc } from "@/types/sanity";
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata = buildMetadata({
+  title: "About Hayvora Holdings",
+  description:
+    "Hayvora Holdings Limited is a Ghanaian multidisciplinary group delivering civil and architectural construction, geospatial consulting, and agricultural systems through three specialist divisions.",
+  path: "/about",
+});
 
 export default async function HoldingsAboutPage() {
   const brand = await safeFetch<BrandDoc>(BRAND_BY_SLUG_QUERY, { slug: "holdings" }, ["brand", "brand:holdings"]);

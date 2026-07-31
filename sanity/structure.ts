@@ -22,6 +22,10 @@ export const structure: StructureResolver = (S) =>
         .title("Site Settings")
         .child(S.document().schemaType("siteSettings").documentId("siteSettings")),
 
+      S.listItem()
+        .title("Home Gallery")
+        .child(S.document().schemaType("homeGallery").documentId("homeGallery")),
+
       S.divider(),
 
       ...BRAND_SLUGS.map(({ slug, title }) =>
@@ -60,6 +64,10 @@ export const structure: StructureResolver = (S) =>
         .child(S.documentTypeList("property").title("Properties")),
 
       S.listItem()
+        .title("Clients")
+        .child(S.documentTypeList("client").title("Clients")),
+
+      S.listItem()
         .title("Inquiries")
         .child(
           S.documentList()
@@ -81,6 +89,8 @@ export const structure: StructureResolver = (S) =>
             "testimonial",
             "teamMember",
             "service",
+            "client",
+            "homeGallery",
           ].includes(item.getId() ?? ""),
       ),
     ]);

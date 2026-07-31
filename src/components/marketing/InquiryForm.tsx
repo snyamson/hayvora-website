@@ -37,7 +37,7 @@ export function InquiryForm({
 
   if (isSubmitSuccessful) {
     return (
-      <div className="rounded-2xl bg-brand-surface p-6 text-brand-ink">
+      <div className="rounded-card bg-brand-surface p-6 text-brand-ink">
         <p className="font-semibold">Thank you — we&apos;ve received your request.</p>
         <p className="mt-1 text-sm text-brand-ink/70">
           A member of our team will contact you shortly to arrange next steps.
@@ -54,7 +54,7 @@ export function InquiryForm({
         <label className="mb-1 block text-sm font-medium text-brand-ink">Name</label>
         <input
           {...register("name")}
-          className="w-full rounded-lg border border-black/10 px-4 py-2.5 focus:border-brand-primary focus:outline-none"
+          className="w-full rounded-control border border-black/10 px-4 py-2.5 focus:border-brand-primary focus:outline-none"
         />
         {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>}
       </div>
@@ -64,7 +64,7 @@ export function InquiryForm({
         <input
           type="email"
           {...register("email")}
-          className="w-full rounded-lg border border-black/10 px-4 py-2.5 focus:border-brand-primary focus:outline-none"
+          className="w-full rounded-control border border-black/10 px-4 py-2.5 focus:border-brand-primary focus:outline-none"
         />
         {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
       </div>
@@ -73,7 +73,7 @@ export function InquiryForm({
         <label className="mb-1 block text-sm font-medium text-brand-ink">Phone</label>
         <input
           {...register("phone")}
-          className="w-full rounded-lg border border-black/10 px-4 py-2.5 focus:border-brand-primary focus:outline-none"
+          className="w-full rounded-control border border-black/10 px-4 py-2.5 focus:border-brand-primary focus:outline-none"
         />
         {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>}
       </div>
@@ -83,7 +83,7 @@ export function InquiryForm({
         <textarea
           {...register("message")}
           rows={4}
-          className="w-full rounded-lg border border-black/10 px-4 py-2.5 focus:border-brand-primary focus:outline-none"
+          className="w-full rounded-control border border-black/10 px-4 py-2.5 focus:border-brand-primary focus:outline-none"
         />
       </div>
 

@@ -1,11 +1,15 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { safeFetch } from "../../../sanity/lib/client";
 import {
+  ALL_CLIENTS_QUERY,
   ALL_SUBSIDIARY_BRANDS_QUERY,
   BRAND_BY_SLUG_QUERY,
   FEATURED_PROJECTS_ACROSS_BRANDS_QUERY,
+  HOME_GALLERY_QUERY,
   LATEST_AVAILABLE_PROPERTIES_QUERY,
+  PROJECT_GALLERY_POOL_QUERY,
 } from "../../../sanity/lib/queries";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -13,22 +17,38 @@ import { FramedMedia } from "@/components/ui/FramedMedia";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { HeroCarousel } from "@/components/marketing/HeroCarousel";
-import { StatsRow } from "@/components/marketing/StatsRow";
+import { HeroStatementCard } from "@/components/marketing/HeroStatementCard";
+import { ClientMarquee } from "@/components/marketing/ClientMarquee";
+import { WhyChoose } from "@/components/marketing/WhyChoose";
+import { PhotoMarquee } from "@/components/marketing/PhotoMarquee";
 import { ProcessSteps } from "@/components/marketing/ProcessSteps";
 import { FeaturedProjectsBento } from "@/components/marketing/FeaturedProjectsBento";
 import { PropertiesCarousel } from "@/components/marketing/PropertiesCarousel";
-import { getHeroSlides } from "@/lib/brandHelpers";
-import { FALLBACK_BRANDS } from "@/lib/fallbackContent";
+import { getHeroSlides, getMarqueeClients, getWhyChooseContent } from "@/lib/brandHelpers";
+import { getGalleryItems } from "@/lib/galleryHelpers";
+import { getProjectThumbnail } from "@/lib/projectHelpers";
+import { FALLBACK_BRANDS, FALLBACK_CLIENTS } from "@/lib/fallbackContent";
 import { urlFor } from "../../../sanity/lib/image";
-import type { BrandDoc, ProjectDoc, PropertyDoc } from "@/types/sanity";
+import type {
+  BrandDoc,
+  ClientDoc,
+  HomeGalleryDoc,
+  ProjectDoc,
+  ProjectGallerySource,
+  PropertyDoc,
+} from "@/types/sanity";
 
 export default async function HoldingsHomePage() {
-  const [brand, subsidiaries, featuredProjects, latestProperties] = await Promise.all([
-    safeFetch<BrandDoc>(BRAND_BY_SLUG_QUERY, { slug: "holdings" }, ["brand", "brand:holdings"]),
-    safeFetch<BrandDoc[]>(ALL_SUBSIDIARY_BRANDS_QUERY, {}, ["brand"]),
-    safeFetch<ProjectDoc[]>(FEATURED_PROJECTS_ACROSS_BRANDS_QUERY, {}, ["project"]),
-    safeFetch<PropertyDoc[]>(LATEST_AVAILABLE_PROPERTIES_QUERY, {}, ["property"]),
-  ]);
+  const [brand, subsidiaries, featuredProjects, latestProperties, clients, homeGallery, galleryProjects] =
+    await Promise.all([
+      safeFetch<BrandDoc>(BRAND_BY_SLUG_QUERY, { slug: "holdings" }, ["brand", "brand:holdings"]),
+      safeFetch<BrandDoc[]>(ALL_SUBSIDIARY_BRANDS_QUERY, {}, ["brand"]),
+      safeFetch<ProjectDoc[]>(FEATURED_PROJECTS_ACROSS_BRANDS_QUERY, {}, ["project"]),
+      safeFetch<PropertyDoc[]>(LATEST_AVAILABLE_PROPERTIES_QUERY, {}, ["property"]),
+      safeFetch<ClientDoc[]>(ALL_CLIENTS_QUERY, {}, ["client"]),
+      safeFetch<HomeGalleryDoc>(HOME_GALLERY_QUERY, {}, ["homeGallery"]),
+      safeFetch<ProjectGallerySource[]>(PROJECT_GALLERY_POOL_QUERY, {}, ["project"]),
+    ]);
 
   const resolvedBrand = brand ?? FALLBACK_BRANDS.holdings;
   const resolvedSubsidiaries =
@@ -36,26 +56,27 @@ export default async function HoldingsHomePage() {
       ? subsidiaries
       : Object.values(FALLBACK_BRANDS).filter((b) => !b.isParent);
 
+  const marqueeClients = getMarqueeClients(clients);
+  const resolvedClients = marqueeClients.length > 0 ? marqueeClients : FALLBACK_CLIENTS;
+  const whyChoose = getWhyChooseContent(resolvedBrand, FALLBACK_BRANDS.holdings);
+  const galleryItems = getGalleryItems(homeGallery, galleryProjects);
+
   return (
     <>
       <HeroCarousel
         headline={resolvedBrand.hero?.headline ?? resolvedBrand.tagline ?? resolvedBrand.name}
-        subheadline={resolvedBrand.hero?.subheadline}
         slides={getHeroSlides(resolvedBrand)}
         ctaLabel={resolvedBrand.hero?.ctaLabel}
         ctaHref={resolvedBrand.hero?.ctaHref}
       />
 
-      {/* Mission + stats */}
-      <section className="py-24">
-        <Container className="grid grid-cols-1 gap-16 lg:grid-cols-2">
-          <SectionHeading eyebrow="Our Mission" title={resolvedBrand.tagline ?? resolvedBrand.name} />
-          <Reveal delay={0.1} className="flex flex-col justify-between gap-10">
-            <p className="max-w-xl text-lg leading-relaxed text-brand-ink/70">{resolvedBrand.shortDescription}</p>
-            {resolvedBrand.stats && <StatsRow stats={resolvedBrand.stats} />}
-          </Reveal>
-        </Container>
-      </section>
+      {resolvedBrand.hero?.subheadline && (
+        <HeroStatementCard eyebrow="Our Commitment" text={resolvedBrand.hero.subheadline} />
+      )}
+
+      <ClientMarquee clients={resolvedClients} />
+
+      {whyChoose && <WhyChoose content={whyChoose} />}
 
       {/* Divisions */}
       <section id="divisions" className="scroll-mt-28 bg-brand-surface py-24">
@@ -87,13 +108,19 @@ export default async function HoldingsHomePage() {
                     </Button>
                   </div>
 
-                  <div className={reversed ? "md:order-1" : ""}>
+                  {/* The image links to the division too — the hover motion in
+                      FramedMedia is keyed off this `group`. */}
+                  <Link
+                    href={`/${sub.slug.current}`}
+                    aria-label={`Visit ${sub.name}`}
+                    className={`group block ${reversed ? "md:order-1" : ""}`}
+                  >
                     <FramedMedia
                       src={heroImage?.type === "image" ? heroImage.imageUrl : undefined}
                       alt={sub.name}
                       className="aspect-[4/3] w-full max-w-md"
                     />
-                  </div>
+                  </Link>
                 </Reveal>
               );
             })}
@@ -115,7 +142,7 @@ export default async function HoldingsHomePage() {
         )}
 
         <Container className="relative flex justify-center px-6 py-20">
-          <Reveal className="max-w-2xl border-2 border-brand-primary bg-white/90 p-10 text-center backdrop-blur-sm sm:p-14">
+          <Reveal className="max-w-2xl rounded-card border-2 border-brand-primary bg-white/90 p-10 text-center backdrop-blur-sm sm:p-14">
             <p className="font-display text-2xl leading-snug font-bold tracking-tight text-brand-ink sm:text-3xl">
               One holding company. Three specialist divisions.{" "}
               <span className="text-brand-accent">One point of contact</span> for every project, from ground survey
@@ -151,7 +178,9 @@ export default async function HoldingsHomePage() {
                 location: p.location,
                 summary: p.summary,
                 description: p.description,
-                coverImageUrl: p.coverImage ? urlFor(p.coverImage).width(1000).height(1200).url() : undefined,
+                // Thumbnail, deliberately not the project's hero media — those are
+                // separate uploads so the card and the project page differ.
+                coverImageUrl: getProjectThumbnail(p),
                 gallery: p.gallery?.map((img) => ({
                   url: urlFor(img).width(600).height(600).url(),
                   alt: img.alt,
@@ -161,6 +190,23 @@ export default async function HoldingsHomePage() {
           </Reveal>
         </Container>
       </section>
+
+      {/* Project gallery — every project's photos pooled with the loose Home Gallery
+          uploads. Full-bleed marquee, then a contained masonry grid. */}
+      {galleryItems.length > 0 && (
+        <section className="py-24">
+          <Container>
+            <SectionHeading
+              eyebrow={homeGallery?.eyebrow ?? "Project Gallery"}
+              title={homeGallery?.heading ?? "Our work in pictures"}
+            />
+          </Container>
+
+          <div className="mt-14">
+            <PhotoMarquee items={galleryItems} />
+          </div>
+        </section>
+      )}
 
       {/* Properties CTA */}
       <section className="py-28">
@@ -184,7 +230,7 @@ export default async function HoldingsHomePage() {
           </Reveal>
 
           <div className="mt-12 flex justify-center">
-            <Button href="/properties" variant="secondary" uppercase={false}>
+            <Button href="/properties" variant="secondary">
               View All Properties
             </Button>
           </div>

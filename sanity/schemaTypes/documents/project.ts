@@ -16,7 +16,33 @@ export const project = defineType({
     }),
     defineField({ name: "summary", title: "Summary", type: "text", rows: 3 }),
     defineField({ name: "description", title: "Description", type: "array", of: [{ type: "block" }, { type: "image" }] }),
-    defineField({ name: "coverImage", title: "Cover image", type: "image", options: { hotspot: true } }),
+    defineField({
+      name: "coverImage",
+      title: "Thumbnail",
+      description:
+        "The card image — used in Featured Projects, project grids and social shares. Not shown at the top of the project page unless no hero is set below.",
+      type: "image",
+      options: { hotspot: true },
+    }),
+    defineField({
+      name: "hero",
+      title: "Project page hero",
+      description:
+        "The large media at the top of this project's own page. Upload a video or a different image so the hero and the thumbnail aren't the same picture. Leave both empty to fall back to the thumbnail.",
+      type: "object",
+      options: { collapsible: true, collapsed: false },
+      fields: [
+        defineField({ name: "video", title: "Hero video", type: "file", options: { accept: "video/*" } }),
+        defineField({ name: "image", title: "Hero image", type: "image", options: { hotspot: true } }),
+        defineField({
+          name: "poster",
+          title: "Video poster image",
+          description: "Shown while the video loads. Optional.",
+          type: "image",
+          options: { hotspot: true },
+        }),
+      ],
+    }),
     defineField({
       name: "gallery",
       title: "Gallery",

@@ -5,6 +5,14 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { InquiryForm } from "@/components/marketing/InquiryForm";
 import { FALLBACK_SITE_SETTINGS } from "@/lib/fallbackContent";
 import type { SiteSettingsDoc } from "@/types/sanity";
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata = buildMetadata({
+  title: "Contact Hayvora Holdings",
+  description:
+    "Talk to Hayvora Holdings about construction, land surveying, geotechnical investigation, or agricultural systems work in Ghana. Based at Adenta Shopping Mall, Accra.",
+  path: "/contact",
+});
 
 export default async function HoldingsContactPage() {
   const siteSettings = await safeFetch<SiteSettingsDoc>(SITE_SETTINGS_QUERY, {}, ["siteSettings"]);

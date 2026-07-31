@@ -22,10 +22,20 @@ export const FALLBACK_BRANDS: Record<string, BrandDoc> = {
       ctaLabel: "View Properties",
       ctaHref: "/properties",
     },
+    // Mirrors the live Sanity brand document. Every figure on the site reads from here
+    // (or its Sanity equivalent) — never hardcode a number in a component.
     stats: [
-      { value: "232", label: "Projects Completed" },
+      { value: "22", label: "Projects Completed" },
       { value: "98.99%", label: "Client Satisfaction Rate" },
     ],
+    whyChoose: {
+      eyebrow: "Why Choose Hayvora",
+      heading:
+        "At Hayvora Holdings, quality, safety, and precision are the foundation of everything we build",
+      statDescription: "Delivering civil, architectural, and infrastructure projects across Ghana and beyond",
+      ctaLabel: "Get in touch",
+      ctaHref: "/contact",
+    },
     process: [
       {
         title: "Start with Certainty",
@@ -87,6 +97,20 @@ export const FALLBACK_BRANDS: Record<string, BrandDoc> = {
     enabledModules: ["projects", "gallery", "services", "team", "testimonials"],
   },
 };
+
+/**
+ * Client logos shown in the homepage marquee until `client` documents are authored in
+ * Studio. Files live in `public/clients/` — add the image there and the entry here.
+ */
+export const FALLBACK_CLIENTS = [
+  { name: "Ropeak", logoUrl: "/clients/partner-ropeak.png" },
+  { name: "Nathawo Properties & Investment Limited", logoUrl: "/clients/partner-nathawo.png" },
+  { name: "Bauer Services", logoUrl: "/clients/partner-bauer.png" },
+  { name: "Greatjoy", logoUrl: "/clients/partner-greatjoy.png" },
+  { name: "DeSimone", logoUrl: "/clients/partner-desimone.png" },
+  { name: "Fabrico", logoUrl: "/clients/partner-fabrico.png" },
+  { name: "Sienna", logoUrl: "/clients/partner-sienna.png" },
+];
 
 export const FALLBACK_SITE_SETTINGS = {
   title: "Hayvora Holdings Limited",

@@ -58,7 +58,7 @@ export function FeaturedProjectsBento({ projects }: { projects: BentoProject[] }
           <button
             key={project.slug}
             onClick={() => setOpenIndex(i)}
-            className={`group relative block overflow-hidden bg-brand-surface text-left ${BENTO_SPANS[i % BENTO_SPANS.length]}`}
+            className={`group relative block overflow-hidden rounded-card bg-brand-surface text-left ${BENTO_SPANS[i % BENTO_SPANS.length]}`}
           >
             {project.coverImageUrl ? (
               <Image
@@ -94,13 +94,13 @@ export function FeaturedProjectsBento({ projects }: { projects: BentoProject[] }
           onClick={() => setOpenIndex(null)}
         >
           <div
-            className="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto bg-white"
+            className="relative max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-card bg-white"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={() => setOpenIndex(null)}
               aria-label="Close"
-              className="font-display absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center bg-white text-xl font-bold text-brand-ink shadow-md hover:bg-brand-surface"
+              className="font-display absolute top-4 right-4 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white text-xl font-bold text-brand-ink shadow-md hover:bg-brand-surface"
             >
               ×
             </button>
@@ -138,7 +138,7 @@ export function FeaturedProjectsBento({ projects }: { projects: BentoProject[] }
               {openProject.gallery && openProject.gallery.length > 0 && (
                 <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {openProject.gallery.map((img, i) => (
-                    <div key={i} className="relative aspect-square overflow-hidden">
+                    <div key={i} className="relative aspect-square overflow-hidden rounded-card">
                       <Image src={img.url} alt={img.alt ?? ""} fill className="object-cover" />
                     </div>
                   ))}

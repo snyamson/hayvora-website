@@ -8,6 +8,14 @@ import { PropertyListingCard, type PropertyCard } from "@/components/marketing/P
 import { urlFor } from "../../../../sanity/lib/image";
 import { SUBSIDIARY_SLUGS } from "@/lib/brands";
 import type { PropertyDoc } from "@/types/sanity";
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata = buildMetadata({
+  title: "Properties for Sale in Ghana",
+  description:
+    "Browse available land and property listings across Hayvora Holdings and its divisions, with locations, specifications, and current availability.",
+  path: "/properties",
+});
 
 function toCard(property: PropertyDoc): PropertyCard {
   const specsParts = [
