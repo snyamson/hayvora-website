@@ -5,11 +5,14 @@ import type { SanityImage } from "@/types/sanity";
 
 /**
  * Canonical origin for the site. Every absolute URL (canonicals, sitemap, OG tags,
- * JSON-LD) derives from this, so it must match the live domain exactly — a mismatch
- * makes Google treat the two as separate sites and split their ranking signals.
- * Override per-environment with NEXT_PUBLIC_SITE_URL (set it on Vercel for previews).
+ * JSON-LD) derives from this, so it must match the host that actually serves a 200.
+ *
+ * It is the `www` host deliberately: the apex `hayvora.com` 308-redirects to
+ * `www.hayvora.com` on Vercel, so pointing canonicals at the apex would aim every one
+ * of them at a redirect. If the domain config is ever flipped to make the apex primary,
+ * change this at the same time.
  */
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://hayvora.com").replace(/\/$/, "");
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.hayvora.com").replace(/\/$/, "");
 
 export const SITE_NAME = "Hayvora Holdings Limited";
 
