@@ -1,28 +1,6 @@
-"use client";
-
-import { motion } from "motion/react";
-import type { ReactNode } from "react";
-
-export function Reveal({
-  children,
-  delay = 0,
-  className = "",
-  y = 24,
-}: {
-  children: ReactNode;
-  delay?: number;
-  className?: string;
-  y?: number;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
+/**
+ * `Reveal` now lives in the shared motion system alongside the other scroll primitives
+ * (Stagger, TextReveal, Parallax, ClipReveal, CountUp). Re-exported here so the many
+ * existing `@/components/ui/Reveal` imports keep resolving.
+ */
+export { Reveal } from "@/components/ui/Motion";

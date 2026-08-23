@@ -79,6 +79,23 @@ export const GALLERY_IMAGES_BY_BRAND_QUERY = defineQuery(`
   }
 `);
 
+export const DIVISION_PROFILE_BY_BRAND_QUERY = defineQuery(`
+  *[_type == "divisionProfile" && brand->slug.current == $slug][0]{
+    legalName,
+    tagline,
+    overview,
+    vision,
+    mission,
+    values[]{title, description},
+    servicesHeading,
+    servicesIntro,
+    services[]{title, description, items, image},
+    clients,
+    operationalZone,
+    operationalNote
+  }
+`);
+
 export const SERVICES_BY_BRAND_QUERY = defineQuery(`
   *[_type == "service" && brand->slug.current == $slug] | order(orderRank asc)
 `);

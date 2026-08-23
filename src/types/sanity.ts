@@ -52,6 +52,22 @@ export type BrandDoc = {
   seo?: SeoMetaDoc;
 };
 
+/** sanity/schemaTypes/documents/divisionProfile.ts */
+export type DivisionProfileDoc = {
+  legalName?: string;
+  tagline?: string;
+  overview?: string[];
+  vision?: string;
+  mission?: string;
+  values?: { title: string; description?: string }[];
+  servicesHeading?: string;
+  servicesIntro?: string;
+  services?: { title: string; description?: string; items?: string[]; image?: SanityImage }[];
+  clients?: string[];
+  operationalZone?: string;
+  operationalNote?: string;
+};
+
 export type HomeGalleryDoc = {
   _id: string;
   eyebrow?: string;

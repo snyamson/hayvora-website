@@ -3,8 +3,12 @@ import { NextResponse } from "next/server";
 
 /**
  * Target for a Sanity webhook (Settings -> API -> Webhooks) configured to fire on
- * create/update/delete for project, property, brand, siteSettings, service, testimonial,
- * teamMember, client. Configure the webhook to send header `x-webhook-secret: <SANITY_REVALIDATE_SECRET>`
+ * create/update/delete for project, property, brand, divisionProfile, siteSettings,
+ * service, testimonial, teamMember, client.
+ *
+ * `divisionProfile` has no slug of its own (it references a brand), so only the
+ * bare `divisionProfile` type tag fires for it — which is enough, since every
+ * division page tags its profile query with that type. Configure the webhook to send header `x-webhook-secret: <SANITY_REVALIDATE_SECRET>`
  * and a JSON body containing at least `_type` and `slug`.
  */
 export async function POST(request: Request) {

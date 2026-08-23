@@ -3,10 +3,12 @@ import Link from "next/link";
 import { safeFetch } from "../../../../sanity/lib/client";
 import { AVAILABLE_PROPERTIES_QUERY, SOLD_PROPERTIES_QUERY } from "../../../../sanity/lib/queries";
 import { Container } from "@/components/ui/Container";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Stagger, StaggerItem } from "@/components/ui/Motion";
+import { PageHero } from "@/components/layout/PageHero";
 import { PropertyListingCard, type PropertyCard } from "@/components/marketing/PropertyListingCard";
 import { urlFor } from "../../../../sanity/lib/image";
 import { SUBSIDIARY_SLUGS } from "@/lib/brands";
+import { FALLBACK_BRANDS } from "@/lib/fallbackContent";
 import type { PropertyDoc } from "@/types/sanity";
 import { buildMetadata } from "@/lib/seo";
 
@@ -36,6 +38,24 @@ function toCard(property: PropertyDoc): PropertyCard {
   };
 }
 
+/** Filter pill. Same height and radius as a `sm` Button so the row lines up with the
+ *  rest of the site's controls. */
+function FilterPill({ href, active, children }: { href: string; active: boolean; children: React.ReactNode }) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "true" : undefined}
+      className={`font-display inline-flex items-center rounded-full px-5 py-2.5 text-[0.8125rem] font-bold tracking-wide transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${
+        active
+          ? "bg-brand-primary text-brand-text-on-primary shadow-soft"
+          : "border border-brand-line bg-white text-brand-ink/70 hover:-translate-y-0.5 hover:border-brand-primary hover:text-brand-primary hover:shadow-soft"
+      }`}
+    >
+      {children}
+    </Link>
+  );
+}
+
 export default async function PropertiesPage({
   searchParams,
 }: {
@@ -53,54 +73,58 @@ export default async function PropertiesPage({
   const filtered = (properties ?? []).filter((p) => !category || p.brand?.slug?.current === category);
 
   return (
-    <section className="pt-40 pb-24">
-      <Container>
-        <SectionHeading
-          eyebrow="Property Listings"
-          title="Available Properties"
-          description="Browse listings across all Hayvora companies. Submit a request and our team will arrange a viewing."
-        />
+    <>
+      <PageHero
+        art="crane"
+        secondaryArt="dumpTruck"
+        eyebrow="Property Listings"
+        title={showSold ? "Sold properties" : "Available properties"}
+        description="Land and developments from every Hayvora company. Submit a request and our team will arrange a viewing."
+        breadcrumbs={[{ label: "Home", href: "/" }]}
+      />
 
-        <div className="mt-8 flex flex-wrap items-center gap-2">
-          <Link
-            href="/properties"
-            className={`rounded-full px-4 py-2 text-sm font-medium ${
-              !category && !showSold ? "bg-brand-primary text-brand-text-on-primary" : "bg-brand-surface text-brand-ink"
-            }`}
-          >
-            All
-          </Link>
-          {SUBSIDIARY_SLUGS.map((slug) => (
-            <Link
-              key={slug}
-              href={`/properties?category=${slug}`}
-              className={`rounded-full px-4 py-2 text-sm font-medium capitalize ${
-                category === slug ? "bg-brand-primary text-brand-text-on-primary" : "bg-brand-surface text-brand-ink"
-              }`}
-            >
-              {slug.replace("-", " ")}
-            </Link>
-          ))}
-          <Link
-            href="/properties?view=sold"
-            className={`ml-auto rounded-full px-4 py-2 text-sm font-medium ${
-              showSold ? "bg-brand-primary text-brand-text-on-primary" : "bg-brand-surface text-brand-ink"
-            }`}
-          >
-            View Sold
-          </Link>
-        </div>
+      <section className="hv-aura-bg section relative">
+        <Container>
+          <div className="flex flex-wrap items-center gap-2.5">
+            <FilterPill href="/properties" active={!category && !showSold}>
+              All
+            </FilterPill>
 
-        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.length > 0 ? (
-            filtered.map((property) => <PropertyListingCard key={property.slug.current} property={toCard(property)} />)
-          ) : (
-            <p className="text-brand-ink/60">
-              No properties {showSold ? "sold yet" : "available"} in this category right now — check back soon.
-            </p>
-          )}
-        </div>
-      </Container>
-    </section>
+            {SUBSIDIARY_SLUGS.map((slug) => (
+              <FilterPill key={slug} href={`/properties?category=${slug}`} active={category === slug}>
+                {/* Real division names rather than de-slugged text — "jhm geo consult"
+                    read as a typo in the old pill row. */}
+                {FALLBACK_BRANDS[slug]?.name ?? slug}
+              </FilterPill>
+            ))}
+
+            <span className="ml-auto">
+              <FilterPill href={showSold ? "/properties" : "/properties?view=sold"} active={showSold}>
+                {showSold ? "View available" : "View sold"}
+              </FilterPill>
+            </span>
+          </div>
+
+          <div className="mt-12">
+            {filtered.length > 0 ? (
+              <Stagger gap={0.07} className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {filtered.map((property) => (
+                  <StaggerItem key={property.slug.current} y={26}>
+                    <PropertyListingCard property={toCard(property)} />
+                  </StaggerItem>
+                ))}
+              </Stagger>
+            ) : (
+              <div className="rounded-card border border-brand-line-soft bg-white p-12 text-center shadow-soft">
+                <p className="text-brand-ink/60">
+                  No properties {showSold ? "sold yet" : "available"} in this category right now — check back
+                  soon.
+                </p>
+              </div>
+            )}
+          </div>
+        </Container>
+      </section>
+    </>
   );
 }

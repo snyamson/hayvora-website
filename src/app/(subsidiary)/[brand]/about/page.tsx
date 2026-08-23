@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { safeFetch } from "../../../../../sanity/lib/client";
 import { BRAND_BY_SLUG_QUERY } from "../../../../../sanity/lib/queries";
 import { Container } from "@/components/ui/Container";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Reveal } from "@/components/ui/Motion";
+import { DIVISION_ART } from "@/components/ui/BlueprintArt";
+import { PageHero } from "@/components/layout/PageHero";
 import { PortableText } from "@/components/portable-text/PortableText";
 import { isSubsidiarySlug } from "@/lib/brands";
 import { FALLBACK_BRANDS } from "@/lib/fallbackContent";
@@ -17,17 +19,30 @@ export default async function SubsidiaryAboutPage({ params }: { params: Promise<
   const resolvedBrand = brand ?? FALLBACK_BRANDS[brandSlug];
 
   return (
-    <section className="pt-40 pb-24">
-      <Container className="max-w-3xl">
-        <SectionHeading eyebrow="About" title={resolvedBrand.name} description={resolvedBrand.tagline} />
-        <div className="mt-10">
-          {resolvedBrand.about ? (
-            <PortableText value={resolvedBrand.about} />
-          ) : (
-            <p className="leading-relaxed text-brand-ink/80">{resolvedBrand.shortDescription}</p>
-          )}
-        </div>
-      </Container>
-    </section>
+    <>
+      <PageHero
+        art={DIVISION_ART[brandSlug]?.primary}
+        secondaryArt={DIVISION_ART[brandSlug]?.secondary}
+        eyebrow="About"
+        title={resolvedBrand.name}
+        description={resolvedBrand.tagline}
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+          { label: resolvedBrand.name, href: `/${brandSlug}` },
+        ]}
+      />
+
+      <section className="hv-aura-bg section relative">
+        <Container className="max-w-3xl">
+          <Reveal>
+            {resolvedBrand.about ? (
+              <PortableText value={resolvedBrand.about} />
+            ) : (
+              <p className="text-lg leading-relaxed text-brand-ink/75">{resolvedBrand.shortDescription}</p>
+            )}
+          </Reveal>
+        </Container>
+      </section>
+    </>
   );
 }

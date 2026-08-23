@@ -1,5 +1,6 @@
 export { siteSettings } from "./siteSettings";
 export { brand } from "./brand";
+export { divisionProfile } from "./divisionProfile";
 export { project } from "./project";
 export { property } from "./property";
 export { inquiry } from "./inquiry";

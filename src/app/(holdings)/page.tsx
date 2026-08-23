@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 
 import { safeFetch } from "../../../sanity/lib/client";
 import {
@@ -13,9 +12,9 @@ import {
 } from "../../../sanity/lib/queries";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
-import { FramedMedia } from "@/components/ui/FramedMedia";
-import { Reveal } from "@/components/ui/Reveal";
+import { Parallax, Reveal, TextReveal } from "@/components/ui/Motion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { DivisionsShowcase } from "@/components/marketing/DivisionsShowcase";
 import { HeroCarousel } from "@/components/marketing/HeroCarousel";
 import { HeroStatementCard } from "@/components/marketing/HeroStatementCard";
 import { ClientMarquee } from "@/components/marketing/ClientMarquee";
@@ -64,109 +63,110 @@ export default async function HoldingsHomePage() {
   return (
     <>
       <HeroCarousel
+        eyebrow="Hayvora Holdings Limited"
         headline={resolvedBrand.hero?.headline ?? resolvedBrand.tagline ?? resolvedBrand.name}
         slides={getHeroSlides(resolvedBrand)}
         ctaLabel={resolvedBrand.hero?.ctaLabel}
         ctaHref={resolvedBrand.hero?.ctaHref}
+        secondaryCtaLabel="Our divisions"
+        secondaryCtaHref="/#divisions"
       />
 
       {resolvedBrand.hero?.subheadline && (
         <HeroStatementCard eyebrow="Our Commitment" text={resolvedBrand.hero.subheadline} />
       )}
 
-      <ClientMarquee clients={resolvedClients} />
+      <ClientMarquee clients={resolvedClients} label="Trusted by teams across Ghana and West Africa" />
 
       {whyChoose && <WhyChoose content={whyChoose} />}
 
-      {/* Divisions */}
-      <section id="divisions" className="scroll-mt-28 bg-brand-surface py-24">
+      {/* ---- Divisions ---- */}
+      <section id="divisions" className="hv-grid-bg section relative scroll-mt-28 bg-brand-tint">
         <Container>
           <SectionHeading
             eyebrow="Our Divisions"
             title="Three specialist divisions, one standard of excellence"
+            description="Each division runs its own specialists and equipment — and shares a single point of contact, so a project never falls between them."
           />
 
-          <div className="mt-16 flex flex-col gap-20 sm:gap-28">
-            {resolvedSubsidiaries.map((sub, i) => {
-              const heroImage = getHeroSlides(sub).find((s) => s.type === "image");
-              const reversed = i % 2 === 1;
+          <Reveal delay={0.1} className="mt-16">
+            <DivisionsShowcase
+              divisions={resolvedSubsidiaries.map((sub) => {
+                const heroImage = getHeroSlides(sub).find((s) => s.type === "image");
+                return {
+                  slug: sub.slug.current,
+                  name: sub.name,
+                  tagline: sub.tagline,
+                  description: sub.shortDescription,
+                  imageUrl: heroImage?.type === "image" ? heroImage.imageUrl : undefined,
+                };
+              })}
+            />
+          </Reveal>
+        </Container>
+      </section>
 
-              return (
-                <Reveal
-                  key={sub.slug.current}
-                  className="grid grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-16"
-                >
-                  <div className={reversed ? "md:order-2" : ""}>
-                    <h3 className="font-display text-3xl font-bold tracking-tight text-brand-ink sm:text-4xl">
-                      {sub.name}
-                    </h3>
-                    <p className="mt-6 max-w-md text-base leading-relaxed text-brand-ink/70">
-                      {sub.shortDescription}
-                    </p>
-                    <Button href={`/${sub.slug.current}`} variant="primary" className="mt-8">
-                      Learn More
-                    </Button>
-                  </div>
+      {/* ---- Narrative statement ---- */}
+      <section className="relative flex min-h-[520px] items-center justify-center overflow-hidden bg-brand-secondary-deep">
+        {resolvedBrand.narrativeImage ? (
+          <Parallax speed={50} className="absolute inset-0">
+            <Image
+              src={urlFor(resolvedBrand.narrativeImage).width(1920).height(1080).url()}
+              alt=""
+              fill
+              sizes="100vw"
+              className="scale-110 object-cover"
+            />
+          </Parallax>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-brand-secondary-deep via-brand-primary to-brand-secondary" />
+        )}
 
-                  {/* The image links to the division too — the hover motion in
-                      FramedMedia is keyed off this `group`. */}
-                  <Link
-                    href={`/${sub.slug.current}`}
-                    aria-label={`Visit ${sub.name}`}
-                    className={`group block ${reversed ? "md:order-1" : ""}`}
-                  >
-                    <FramedMedia
-                      src={heroImage?.type === "image" ? heroImage.imageUrl : undefined}
-                      alt={sub.name}
-                      className="aspect-[4/3] w-full max-w-md"
-                    />
-                  </Link>
-                </Reveal>
-              );
-            })}
+        <div aria-hidden className="absolute inset-0 bg-brand-secondary-deep/70" />
+
+        <Container className="relative flex justify-center px-6 py-24">
+          <div className="max-w-3xl text-center">
+            <TextReveal
+              as="p"
+              text="One holding company. Three specialist divisions. One point of contact for every project, from ground survey to final handover."
+              className="font-display text-2xl leading-[1.3] font-semibold tracking-tight text-white sm:text-3xl lg:text-[2.5rem]"
+            />
+            <Reveal delay={0.4} className="mt-10 flex justify-center">
+              <Button href="/about" variant="white" withArrow>
+                About Hayvora
+              </Button>
+            </Reveal>
           </div>
         </Container>
       </section>
 
-      {/* Narrative statement */}
-      <section className="relative flex min-h-[420px] items-center justify-center overflow-hidden">
-        {resolvedBrand.narrativeImage ? (
-          <Image
-            src={urlFor(resolvedBrand.narrativeImage).width(1920).height(1080).url()}
-            alt=""
-            fill
-            className="object-cover"
+      {/* ---- Process ---- */}
+      <section className="hv-aura-bg section relative">
+        <Container>
+          <SectionHeading
+            eyebrow="How We Work"
+            title="Our process"
+            description="Three stages, the same on every job — so you always know what happens next."
           />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-primary to-brand-accent" />
-        )}
-
-        <Container className="relative flex justify-center px-6 py-20">
-          <Reveal className="max-w-2xl rounded-card border-2 border-brand-primary bg-white/90 p-10 text-center backdrop-blur-sm sm:p-14">
-            <p className="font-display text-2xl leading-snug font-bold tracking-tight text-brand-ink sm:text-3xl">
-              One holding company. Three specialist divisions.{" "}
-              <span className="text-brand-accent">One point of contact</span> for every project, from ground survey
-              to final handover.
-            </p>
-          </Reveal>
-        </Container>
-      </section>
-
-      {/* Process */}
-      <section className="py-24">
-        <Container>
-          <SectionHeading eyebrow="How We Work" title="Our process" />
-          <Reveal delay={0.1} className="mt-14">
+          <div className="mt-16">
             <ProcessSteps steps={resolvedBrand.process ?? []} />
-          </Reveal>
+          </div>
         </Container>
       </section>
 
-      {/* Featured projects */}
-      <section className="bg-brand-surface py-24">
+      {/* ---- Featured projects ---- */}
+      <section className="section bg-brand-tint">
         <Container>
-          <SectionHeading eyebrow="Selected Work" title="Featured projects" />
-          <Reveal delay={0.1} className="mt-14">
+          <SectionHeading
+            eyebrow="Selected Work"
+            title="Featured projects"
+            action={
+              <Button href="/#divisions" variant="outline" withArrow>
+                Browse by division
+              </Button>
+            }
+          />
+          <div className="mt-16">
             <FeaturedProjectsBento
               projects={(featuredProjects ?? []).map((p) => ({
                 slug: p.slug.current,
@@ -187,37 +187,44 @@ export default async function HoldingsHomePage() {
                 })),
               }))}
             />
-          </Reveal>
+          </div>
         </Container>
       </section>
 
-      {/* Project gallery — every project's photos pooled with the loose Home Gallery
-          uploads. Full-bleed marquee, then a contained masonry grid. */}
+      {/* ---- Project gallery ---- */}
+      {/* Every project's photos pooled with the loose Home Gallery uploads. Full-bleed
+          marquee under a contained heading. */}
       {galleryItems.length > 0 && (
-        <section className="py-24">
+        <section className="section">
           <Container>
             <SectionHeading
+              align="center"
               eyebrow={homeGallery?.eyebrow ?? "Project Gallery"}
               title={homeGallery?.heading ?? "Our work in pictures"}
             />
           </Container>
 
-          <div className="mt-14">
+          <div className="mt-16">
             <PhotoMarquee items={galleryItems} />
           </div>
         </section>
       )}
 
-      {/* Properties CTA */}
-      <section className="py-28">
+      {/* ---- Properties ---- */}
+      <section className="hv-grid-bg section relative bg-brand-tint">
         <Container>
           <SectionHeading
-            align="center"
             eyebrow="Property Listings"
-            title="Explore available properties across all our companies"
+            title="Available properties across the group"
+            description="Land and developments from every Hayvora company, in one place."
+            action={
+              <Button href="/properties" variant="outline" withArrow>
+                View all properties
+              </Button>
+            }
           />
 
-          <Reveal delay={0.1} className="mt-14">
+          <div className="mt-16">
             <PropertiesCarousel
               properties={(latestProperties ?? []).map((p) => ({
                 slug: p.slug.current,
@@ -227,12 +234,6 @@ export default async function HoldingsHomePage() {
                 status: p.status,
               }))}
             />
-          </Reveal>
-
-          <div className="mt-12 flex justify-center">
-            <Button href="/properties" variant="secondary">
-              View All Properties
-            </Button>
           </div>
         </Container>
       </section>

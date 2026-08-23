@@ -14,9 +14,51 @@
   --brand-ink: #0a0a0a;
   --brand-text-on-primary: #ffffff;
 
-  /* Warm highlight accent — used sparingly (hero frame device, small callouts)
-     where blue/green don't pop enough against cool-toned photography. */
+  /* Warm highlight. Now reserved for exactly one job — the "Reserved" listing status,
+     where an amber chip carries a meaning blue and green don't. It is deliberately no
+     longer used as a decorative accent; blue fills that role (see below). */
   --brand-highlight: #f2a93b;
+
+  /* Tints and shades derived from the brand hues above with color-mix, so the whole
+     surface/border/wash system stays inside the brand palette — no new colours are
+     introduced, only lighter and darker mixes of ones already approved. Because they're
+     built from the same custom properties, a Sanity brand override recolours every
+     tint automatically.
+
+     GREEN LEADS. Section washes, tints, hairlines, elevation and the large colour
+     bands all derive from `--brand-secondary`, which makes green the hue the site
+     reads as. Blue is held back for controls and accents so it stays an event rather
+     than the background. */
+  --brand-secondary-tint-3: color-mix(in oklab, var(--brand-secondary) 3%, #ffffff);
+  --brand-secondary-tint-6: color-mix(in oklab, var(--brand-secondary) 6%, #ffffff);
+  --brand-secondary-tint-12: color-mix(in oklab, var(--brand-secondary) 12%, #ffffff);
+  /* The deep green behind every full-bleed band: page heroes, the closing CTA, the
+     narrative statement, and the scrims over photography. */
+  --brand-secondary-deep: color-mix(in oklab, var(--brand-secondary) 72%, #000000);
+
+  /* Blue shades. Buttons keep `--brand-primary` at full strength; these cover the
+     accent marks (eyebrow rules, status dots) that previously used gold. */
+  --brand-primary-tint-6: color-mix(in oklab, var(--brand-primary) 6%, #ffffff);
+  --brand-primary-tint-12: color-mix(in oklab, var(--brand-primary) 12%, #ffffff);
+  --brand-primary-deep: color-mix(in oklab, var(--brand-primary) 82%, #000000);
+  /* Lifted blue for accent marks sitting on the deep green bands, where the base blue
+     is too close in value to read. */
+  --brand-primary-bright: color-mix(in oklab, var(--brand-primary) 58%, #ffffff);
+
+  /* Hairlines, now green-tinted so dividers belong to the dominant hue. */
+  --brand-line: color-mix(in oklab, var(--brand-secondary) 16%, transparent);
+  --brand-line-soft: color-mix(in oklab, var(--brand-secondary) 9%, transparent);
+
+  /* Vertical rhythm. One spacious scale used by the `.section` utilities below so every
+     band on the site breathes at the same three sizes instead of ad-hoc py-24/py-28. */
+  --space-section: 7rem; /* 112px — standard band */
+  --space-section-lg: 9.5rem; /* 152px — feature band */
+  --space-section-sm: 4.5rem; /* 72px  — tight band */
+
+  /* Apple's standard easing, plus a longer "exit" curve for scroll reveals. Every
+     transition on the site pulls from these two so motion feels like one system. */
+  --ease-brand: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @theme inline {
@@ -33,18 +75,43 @@
   --color-brand-text-on-primary: var(--brand-text-on-primary);
   --color-brand-highlight: var(--brand-highlight);
 
+  /* Derived tokens, exposed so components can say `bg-brand-tint` / `border-brand-line`
+     instead of reaching for a raw neutral like `bg-neutral-100` or `border-black/5`.
+     The neutral-sounding names (`tint`, `line`) all resolve to green. */
+  --color-brand-tint: var(--brand-secondary-tint-3);
+  --color-brand-tint-strong: var(--brand-secondary-tint-6);
+  --color-brand-tint-deep: var(--brand-secondary-tint-12);
+  --color-brand-secondary-deep: var(--brand-secondary-deep);
+  --color-brand-secondary-tint: var(--brand-secondary-tint-6);
+  --color-brand-secondary-tint-strong: var(--brand-secondary-tint-12);
+  --color-brand-primary-deep: var(--brand-primary-deep);
+  --color-brand-primary-bright: var(--brand-primary-bright);
+  --color-brand-primary-tint: var(--brand-primary-tint-6);
+  --color-brand-line: var(--brand-line);
+  --color-brand-line-soft: var(--brand-line-soft);
+
   /* Two radii for the whole site, so corners stay consistent everywhere:
      `rounded-card`    — media, cards, panels, image tiles
      `rounded-control` — buttons, inputs, nav items, small chips
      Pills and dots keep `rounded-full`; nothing else should set a radius. */
-  --radius-card: 1rem;
-  --radius-control: 0.5rem;
+  --radius-card: 1.25rem;
+  --radius-control: 0.75rem;
+
+  /* Elevation. Green-tinted rather than pure black, so a lifted card reads as lit by
+     the same environment as everything else. */
+  --shadow-soft: 0 1px 2px color-mix(in oklab, var(--brand-secondary) 10%, transparent),
+    0 8px 24px -12px color-mix(in oklab, var(--brand-secondary) 20%, transparent);
+  --shadow-lift: 0 2px 4px color-mix(in oklab, var(--brand-secondary) 10%, transparent),
+    0 18px 40px -16px color-mix(in oklab, var(--brand-secondary) 30%, transparent);
+  --shadow-float: 0 4px 8px color-mix(in oklab, var(--brand-secondary) 10%, transparent),
+    0 32px 64px -24px color-mix(in oklab, var(--brand-secondary) 36%, transparent);
 }
 
 /* This site is intentionally light-only (see design plan) — no dark-mode override.
    Body background/text stay fixed regardless of the visitor's OS/browser theme. */
 html {
   overflow-x: hidden;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -55,6 +122,9 @@ body {
      the tail here covers the case where the variable itself is missing. */
   font-family: var(--font-sans), "Helvetica Neue", Arial, ui-sans-serif, system-ui, sans-serif;
   overflow-x: hidden;
+  /* Optical sizing + kerning make Montserrat's larger cuts noticeably tighter. */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1,
@@ -62,7 +132,137 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display), "Helvetica Neue", Arial, ui-sans-serif, system-ui, sans-serif;
+  /* Display sizes need negative tracking to stop Montserrat looking airy at 48px+. */
+  letter-spacing: -0.02em;
 }
+
+::selection {
+  background: color-mix(in oklab, var(--brand-secondary) 22%, transparent);
+  color: var(--brand-ink);
+}
+
+/* One focus ring for the entire site. Uses the brand green so it reads as intentional
+   rather than a browser default, and `:focus-visible` so mouse users never see it. */
+:focus-visible {
+  outline: 2px solid var(--brand-secondary);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Vertical rhythm utilities
+   Every major band uses one of these three instead of hand-picked padding, so
+   section spacing is consistent across the whole site and tunable from one token.
+   --------------------------------------------------------------------------- */
+.section {
+  padding-block: var(--space-section);
+}
+
+.section-lg {
+  padding-block: var(--space-section-lg);
+}
+
+.section-sm {
+  padding-block: var(--space-section-sm);
+}
+
+@media (max-width: 640px) {
+  :root {
+    --space-section: 4.5rem;
+    --space-section-lg: 5.5rem;
+    --space-section-sm: 3rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Background design
+   Three stackable, purely decorative layers. All are built from the brand hues at
+   very low alpha, so they add depth without introducing a colour.
+   --------------------------------------------------------------------------- */
+
+/* Blueprint grid — a nod to the survey/drawing side of the business. Two crossed
+   repeating-linear-gradients, masked to fade out at the edges so it never ends on a
+   hard line. */
+.hv-grid-bg {
+  position: relative;
+  isolation: isolate;
+}
+
+.hv-grid-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      color-mix(in oklab, var(--brand-secondary) 9%, transparent) 0 1px,
+      transparent 1px 100%
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--brand-secondary) 9%, transparent) 0 1px,
+      transparent 1px 100%
+    );
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 0%, transparent 78%);
+}
+
+/* Soft colour wash — two large, very faint radial pools (navy and green) that give a
+   white section a sense of light without tinting it. */
+.hv-aura-bg {
+  position: relative;
+  isolation: isolate;
+}
+
+.hv-aura-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(
+      ellipse 46% 42% at 12% 8%,
+      color-mix(in oklab, var(--brand-secondary) 13%, transparent) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 44% 48% at 92% 88%,
+      color-mix(in oklab, var(--brand-primary) 8%, transparent) 0%,
+      transparent 70%
+    );
+}
+
+/* Fine grain. Breaks up the large flat white areas so gradients don't band on wide
+   displays. Kept as an inline SVG so there's no extra network request. */
+.hv-grain-bg {
+  position: relative;
+  isolation: isolate;
+}
+
+.hv-grain-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.4;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+}
+
+/* Hairline rule that fades at both ends — used between bands instead of a full-width
+   border, which always reads heavier than intended. */
+.hv-rule {
+  height: 1px;
+  border: 0;
+  background: linear-gradient(to right, transparent, var(--brand-line), transparent);
+}
+
+/* ---------------------------------------------------------------------------
+   Marquees
+   --------------------------------------------------------------------------- */
 
 /* Infinite client-logo marquee. The track renders its items twice, so translating it
    exactly -50% lands the second copy where the first started — a seamless loop, no JS. */
@@ -77,6 +277,9 @@ h4 {
 
 .hv-marquee-track {
   animation: hv-marquee var(--hv-marquee-duration, 40s) linear infinite;
+  /* Promote once, up front — without this the browser re-rasterises the very wide
+     track on every frame of a long-running loop. */
+  will-change: transform;
 }
 
 /* Second row of a paired marquee — same keyframes, played backwards, so the two rows
@@ -89,8 +292,94 @@ h4 {
   animation-play-state: paused;
 }
 
+/* ---------------------------------------------------------------------------
+   Ambient motion
+   --------------------------------------------------------------------------- */
+
+/* Slow drift for decorative background shapes. */
+@keyframes hv-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -18px, 0);
+  }
+}
+
+.hv-float {
+  animation: hv-float var(--hv-float-duration, 9s) var(--ease-brand) infinite;
+}
+
+/* Light sweep across a surface — used on the header CTA and primary buttons. */
+@keyframes hv-sheen {
+  from {
+    transform: translateX(-120%) skewX(-18deg);
+  }
+  to {
+    transform: translateX(220%) skewX(-18deg);
+  }
+}
+
+.hv-sheen::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 45%;
+  background: linear-gradient(to right, transparent, rgb(255 255 255 / 0.28), transparent);
+  transform: translateX(-120%) skewX(-18deg);
+  pointer-events: none;
+}
+
+.hv-sheen:hover::after {
+  animation: hv-sheen 0.9s var(--ease-out-expo);
+}
+
+/* Scroll-hint chevron under the hero. */
+@keyframes hv-nudge {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 1;
+  }
+}
+
+.hv-nudge {
+  animation: hv-nudge 2s var(--ease-brand) infinite;
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion
+   One global opt-out. Anything decorative stops; nothing that carries meaning is
+   hidden, because every reveal in components/ui/motion renders its final state when
+   the same preference is detected in JS.
+   --------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  .hv-marquee-track {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hv-marquee-track,
+  .hv-float,
+  .hv-nudge {
     animation: none;
+  }
+
+  .hv-sheen:hover::after {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

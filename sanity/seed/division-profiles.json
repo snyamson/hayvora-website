@@ -1,0 +1,330 @@
+{
+  "infrastructure": {
+    "legalName": "Hayvora Infrastructure Ltd",
+    "tagline": "Building with Precision. Delivering with Purpose.",
+    "overview": [
+      "Hayvora Infrastructure Ltd is a multidisciplinary civil and architectural construction company committed to delivering durable, innovative, and client-centred built environments. As a core division under Hayvora Holdings Ltd, we focus on both public and private sector projects, offering a comprehensive range of services from structural works to turnkey interior finishes — with a strong emphasis on quality control, safety, and timely delivery.",
+      "From foundational works to final finishes, Hayvora Infrastructure integrates technology, technical expertise, and a skilled workforce to bring your vision to life."
+    ],
+    "vision": "To be a trusted leader in delivering resilient, sustainable, and innovative infrastructure solutions across Ghana and West Africa.",
+    "mission": "To construct with excellence, engineer with integrity, and innovate with purpose — ensuring our clients receive value-driven and future-ready infrastructure services.",
+    "values": [
+      {
+        "title": "Integrity",
+        "description": "We build trust by being transparent, honest, and accountable in all dealings — with clients, suppliers, and stakeholders."
+      },
+      {
+        "title": "Excellence",
+        "description": "We pursue outstanding results through high-quality workmanship, project efficiency, and a culture of continuous improvement."
+      },
+      {
+        "title": "Professionalism",
+        "description": "We uphold industry standards, communicate clearly, and execute with discipline and technical competence."
+      },
+      {
+        "title": "Innovation",
+        "description": "We leverage Building Information Modelling (BIM), modern tools, and sustainable construction practices to enhance value and efficiency."
+      },
+      {
+        "title": "Our People",
+        "description": "We empower our team through training, fair labour practices, and a shared mission to deliver results."
+      },
+      {
+        "title": "Safety",
+        "description": "We maintain strict health, safety, and environmental practices across every project site and office operation."
+      }
+    ],
+    "servicesHeading": "Tailored infrastructure solutions",
+    "servicesIntro": "We deliver tailored infrastructure solutions for developers, contractors, NGOs, institutions, and public works authorities.",
+    "services": [
+      {
+        "title": "Civil & Structural Works",
+        "description": "We construct durable and efficient load-bearing systems for all types of buildings and infrastructure projects.",
+        "items": [
+          "Concrete and formwork operations",
+          "Blockwork and bricklaying",
+          "Steel fixing and reinforcement works",
+          "Foundation and retaining structures",
+          "Roadwork support (earthworks, culverts, pavements)"
+        ]
+      },
+      {
+        "title": "Architectural & Design Support",
+        "description": "We partner with architects and planners to bring designs to life from the ground up.",
+        "items": [
+          "Architectural and structural drawings",
+          "Quantity surveying and BOQs",
+          "Project planning and scheduling",
+          "Building Information Modelling (BIM) integration",
+          "Landscaping design and construction"
+        ]
+      },
+      {
+        "title": "Interior Finishing & Fit-Out Works",
+        "description": "We elevate spaces through detailed finishing and interior expertise.",
+        "items": [
+          "Screeding, rendering, and skimming",
+          "Acoustic and POP ceiling installations",
+          "Floor and wall tiling",
+          "Glazing and window fitting",
+          "Kitchen cabinetry and joinery works",
+          "Painting and coatings (interior/exterior)"
+        ]
+      },
+      {
+        "title": "MEP Services & Installations",
+        "description": "We ensure the functionality and efficiency of your built environment.",
+        "items": [
+          "Electrical installation (domestic & commercial)",
+          "Plumbing and sanitary installation",
+          "Repairs and maintenance services"
+        ]
+      },
+      {
+        "title": "Material Supply & Labour Brokerage",
+        "description": "We support contractors and developers with logistics and manpower.",
+        "items": [
+          "Supply of construction materials (blocks, cement, steel, aggregates, etc.)",
+          "Skilled labour outsourcing (masons, carpenters, steel fixers, tilers, painters)"
+        ]
+      }
+    ],
+    "clients": [
+      "Private developers",
+      "Construction firms and contractors",
+      "NGOs and community infrastructure projects",
+      "Government and municipal agencies",
+      "Real estate & property managers"
+    ],
+    "operationalZone": "Ghana and West Africa",
+    "operationalNote": "Crews, plant and supervision are mobilised from Accra, with project teams placed on site for the duration of the build."
+  },
+  "jhm-geo-consult": {
+    "legalName": "JHM Geo Consult",
+    "tagline": "Mapping the Future. Engineering with Purpose.",
+    "overview": [
+      "JHM Geo Consult is a dynamic spatial and engineering services company offering cutting-edge geospatial, environmental, and civil engineering solutions. As a strategic division under Hayvora Holdings Ltd, we provide accurate data, sustainable designs, and technical insights to support infrastructure development, land administration, and environmental compliance across Ghana and West Africa.",
+      "We bridge the gap between land, technology, and development by combining modern surveying tools with practical engineering expertise — ensuring our clients build on a foundation of certainty."
+    ],
+    "vision": "To be the most trusted provider of integrated geospatial and engineering solutions that empower progress and informed decision-making across Africa.",
+    "mission": "To deliver reliable, precise, and technology-driven geo-engineering services that enhance infrastructure, protect the environment, and support sustainable development.",
+    "values": [
+      {
+        "title": "Integrity",
+        "description": "We are committed to data transparency, regulatory compliance, and delivering unbiased, accurate reporting that builds client trust."
+      },
+      {
+        "title": "Excellence",
+        "description": "We deliver every project with scientific accuracy, modern methodology, and an unwavering commitment to detail."
+      },
+      {
+        "title": "Professionalism",
+        "description": "We uphold professional standards, certifications, and best practices in surveying, engineering, and environmental assessments."
+      },
+      {
+        "title": "Innovation",
+        "description": "We use drone mapping, GIS, advanced modelling, and digital workflows to deliver timely and actionable insights."
+      },
+      {
+        "title": "Our People",
+        "description": "Our team of licensed surveyors, engineers, and analysts collaborate with purpose and technical leadership to exceed expectations."
+      },
+      {
+        "title": "Safety",
+        "description": "We operate with safety-first practices — from remote drone flights to field data capture — while minimizing environmental and human risks."
+      }
+    ],
+    "servicesHeading": "Integrated geospatial and engineering services",
+    "servicesIntro": "We serve construction companies, developers, municipalities, NGOs, and private landowners.",
+    "services": [
+      {
+        "title": "Land & Engineering Surveying",
+        "description": "Accurate, on-site measurements for development, title registration, and construction control.",
+        "items": [
+          "Topographic & boundary surveys",
+          "Engineering control surveys",
+          "Layout & setting-out for infrastructure",
+          "Route alignment surveys (roads, pipelines, utilities)"
+        ]
+      },
+      {
+        "title": "Geodetic & GIS Services",
+        "description": "Advanced mapping and spatial analysis for decision-making and design support.",
+        "items": [
+          "Control network establishment",
+          "GIS database development",
+          "Satellite imagery integration",
+          "Drone mapping & aerial orthophotos"
+        ]
+      },
+      {
+        "title": "Environmental & Hydrographic Surveys",
+        "description": "Insightful evaluations of land, water, and ecological systems for development and compliance.",
+        "items": [
+          "Environmental & Social Impact Assessments (ESIA)",
+          "Hydrographic (bathymetric) surveys",
+          "Ecological baseline studies",
+          "Monitoring of natural resources and wetlands"
+        ]
+      },
+      {
+        "title": "Utility Detection & Subsurface Mapping",
+        "description": "Non-destructive location of buried services and potential hazards.",
+        "items": [
+          "Ground Penetrating Radar (GPR) surveys",
+          "Underground utility mapping",
+          "Risk assessment and relocation planning"
+        ]
+      },
+      {
+        "title": "Geotechnical & Site Investigation",
+        "description": "Subsurface exploration for safe and cost-effective foundation and construction planning.",
+        "items": [
+          "Soil sampling & lab testing",
+          "Borehole drilling & SPT",
+          "Foundation recommendations",
+          "Slope and stability analysis"
+        ]
+      },
+      {
+        "title": "Construction Engineering Support",
+        "description": "Providing precision and insights for construction execution and verification.",
+        "items": [
+          "As-built & progress surveys",
+          "Volumetric & cut-fill analysis",
+          "QA/QC surveys and reporting",
+          "Engineering design coordination"
+        ]
+      },
+      {
+        "title": "Technical Training & Capacity Building",
+        "description": "Empowering institutions and professionals in modern geo-engineering tools and standards.",
+        "items": [
+          "GIS & drone operation training",
+          "Survey equipment usage and field training",
+          "Engineering and environmental data analysis workshops"
+        ]
+      }
+    ],
+    "clients": [
+      "Engineering & construction firms",
+      "Landowners & real estate developers",
+      "Mining & energy companies",
+      "Government agencies & local authorities",
+      "Environmental & NGO projects",
+      "Consultants and project managers"
+    ],
+    "operationalZone": "Ghana and West Africa",
+    "operationalNote": "Survey crews and instruments mobilise from Accra, with data processing and reporting handled in-house."
+  },
+  "agrisystem-analytics": {
+    "legalName": "AgriSystem & Analytics",
+    "tagline": "Growing Smarter. Measuring What Matters.",
+    "overview": [
+      "AgriSystem & Analytics is the Hayvora Holdings division working where agriculture meets evidence. We build the physical systems that let growers produce reliably — protected growing structures and the irrigation that feeds them — and we provide the data services that let programmes prove what those investments achieved.",
+      "That pairing is deliberate. A greenhouse without a water plan underperforms, and a development programme without clean field data cannot report on its own results. We work across both, from a first site visit through to the endline report."
+    ],
+    "vision": "To make climate-smart growing systems affordable for African producers, and to make the results of agricultural development measurable and trustworthy.",
+    "mission": "To design and build practical growing infrastructure, and to collect, verify, and analyse the field data that turns agricultural programmes into evidence.",
+    "values": [
+      {
+        "title": "Integrity",
+        "description": "We report what the data shows. Figures are traceable to the field record that produced them, and we do not adjust findings to suit an expected result."
+      },
+      {
+        "title": "Excellence",
+        "description": "Structures are built to hold up through a full season and beyond; datasets are cleaned, validated, and documented well enough for someone else to audit."
+      },
+      {
+        "title": "Professionalism",
+        "description": "We follow accepted monitoring and evaluation practice, agree indicators and methods before fieldwork begins, and deliver in the formats funders require."
+      },
+      {
+        "title": "Innovation",
+        "description": "We favour low-cost, locally maintainable designs and digital data capture over expensive imported systems and paper forms."
+      },
+      {
+        "title": "Our People",
+        "description": "Our agronomists, technicians, enumerators, and analysts train the growers and field teams they work alongside, so capability stays behind after we leave."
+      },
+      {
+        "title": "Safety",
+        "description": "Safe practice on build sites and in the field, with proper consent and data-protection handling for every respondent we record."
+      }
+    ],
+    "servicesHeading": "Growing systems and development analytics",
+    "servicesIntro": "We work with smallholders, commercial growers, agribusinesses, NGOs, and development programmes across Ghana and West Africa.",
+    "services": [
+      {
+        "title": "Low-Cost Greenhouse Construction",
+        "description": "Protected growing structures built from locally available materials, so they can be repaired and extended without importing parts.",
+        "items": [
+          "Site assessment, orientation, and drainage planning",
+          "Tunnel and gable-frame greenhouse construction",
+          "Locally sourced framing, cladding, and insect screening",
+          "Ventilation, shading, and temperature management",
+          "Internal bed layout and pathway preparation",
+          "Handover walkthrough and grower training"
+        ]
+      },
+      {
+        "title": "Irrigation Setup",
+        "description": "Water delivery matched to the crop, the soil, and the water source actually available on site.",
+        "items": [
+          "Water source assessment and demand calculation",
+          "Drip and sprinkler system design and installation",
+          "Pump, tank, and filtration setup",
+          "Fertigation integration",
+          "Irrigation scheduling and soil-moisture monitoring",
+          "Servicing, spares, and maintenance planning"
+        ]
+      },
+      {
+        "title": "Supply Chain Mapping & Risk Support",
+        "description": "Visibility across sourcing, aggregation, and distribution, and a clear view of where a value chain is exposed.",
+        "items": [
+          "Value chain and actor mapping",
+          "Aggregation, storage, and logistics assessment",
+          "Post-harvest loss analysis",
+          "Risk register and mitigation planning",
+          "Supplier verification and traceability",
+          "Market linkage and offtake support"
+        ]
+      },
+      {
+        "title": "Data Entry & Reporting Support for NGOs",
+        "description": "Field data captured cleanly and turned into the reports donors and boards actually ask for.",
+        "items": [
+          "Mobile data collection form design",
+          "Enumerator recruitment, training, and field supervision",
+          "Data cleaning, validation, and quality checks",
+          "Donor and grant reporting formats",
+          "Dashboards and routine reporting packs",
+          "Consent handling and data protection practice"
+        ]
+      },
+      {
+        "title": "Project Tracking & Outcome Analysis",
+        "description": "Monitoring and evaluation from baseline through to endline, built on indicators agreed before fieldwork starts.",
+        "items": [
+          "Baseline and endline studies",
+          "Logframe, theory of change, and indicator design",
+          "Routine monitoring and field verification visits",
+          "Outcome and impact analysis",
+          "Beneficiary feedback collection",
+          "Evaluation reporting and dissemination"
+        ]
+      }
+    ],
+    "clients": [
+      "Smallholder farmers and farmer cooperatives",
+      "Commercial growers and agribusinesses",
+      "NGOs and development programmes",
+      "Donor and funding agencies",
+      "Government agriculture agencies",
+      "Research institutions and consultants"
+    ],
+    "operationalZone": "Ghana and West Africa",
+    "operationalNote": "Build teams and field enumerators mobilise from Accra, with analysis and reporting handled in-house."
+  }
+}

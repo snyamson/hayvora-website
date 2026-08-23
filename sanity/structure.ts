@@ -43,6 +43,14 @@ export const structure: StructureResolver = (S) =>
                       .filter('_type == "brand" && slug.current == $slug')
                       .params({ slug }),
                   ),
+                S.listItem()
+                  .title("Division profile")
+                  .child(
+                    S.documentList()
+                      .title("Division profile")
+                      .filter('_type == "divisionProfile" && brand->slug.current == $slug')
+                      .params({ slug }),
+                  ),
                 ...BRAND_SCOPED_TYPES.map(({ type, title: typeTitle }) =>
                   S.listItem()
                     .title(typeTitle)
@@ -83,6 +91,7 @@ export const structure: StructureResolver = (S) =>
           ![
             "siteSettings",
             "brand",
+            "divisionProfile",
             "project",
             "property",
             "inquiry",
