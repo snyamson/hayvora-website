@@ -1,4 +1,4 @@
-import { SITE_NAME, SITE_URL, absoluteUrl, DEFAULT_DESCRIPTION } from "@/lib/seo";
+import { SITE_URL, absoluteUrl } from "@/lib/seo";
 import type { SiteSettingsDoc } from "@/types/sanity";
 
 /**
@@ -9,6 +9,9 @@ import type { SiteSettingsDoc } from "@/types/sanity";
 export function organizationSchema(settings: SiteSettingsDoc | undefined, subsidiaries: { name: string; slug: string }[]) {
   const contact = settings?.contactInfo;
   const social = (settings?.socialLinks ?? []).map((l) => l.url).filter(Boolean);
+  const name = settings?.companyName ?? settings?.title;
+  const description = settings?.defaultSeo?.metaDescription;
+  const address = contact?.address;
 
   return {
     "@context": "https://schema.org",
@@ -16,8 +19,7 @@ export function organizationSchema(settings: SiteSettingsDoc | undefined, subsid
       {
         "@type": "Organization",
         "@id": `${SITE_URL}/#organization`,
-        name: SITE_NAME,
-        alternateName: "Hayvora",
+        name,
         url: SITE_URL,
         logo: {
           "@type": "ImageObject",
@@ -25,22 +27,24 @@ export function organizationSchema(settings: SiteSettingsDoc | undefined, subsid
           url: absoluteUrl("/icon.png"),
           width: 512,
           height: 512,
-          caption: SITE_NAME,
+          caption: name,
         },
         image: { "@id": `${SITE_URL}/#logo` },
-        description: DEFAULT_DESCRIPTION,
+        ...(description ? { description } : {}),
         ...(contact?.email ? { email: contact.email } : {}),
         ...(contact?.phone ? { telephone: contact.phone } : {}),
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: settings?.footerText ?? "Adenta Shopping Mall",
-          addressLocality: "Accra",
-          addressCountry: "GH",
-        },
-        areaServed: [
-          { "@type": "Country", name: "Ghana" },
-          { "@type": "Place", name: "West Africa" },
-        ],
+        ...(address
+          ? {
+              address: {
+                "@type": "PostalAddress",
+                streetAddress: address.line1,
+                addressLocality: address.city,
+                addressRegion: address.region,
+                addressCountry: address.country,
+              },
+              ...(address.country ? { areaServed: { "@type": "Country", name: address.country } } : {}),
+            }
+          : {}),
         ...(social.length > 0 ? { sameAs: social } : {}),
         subOrganization: subsidiaries.map((s) => ({
           "@type": "Organization",
@@ -52,8 +56,8 @@ export function organizationSchema(settings: SiteSettingsDoc | undefined, subsid
         "@type": "WebSite",
         "@id": `${SITE_URL}/#website`,
         url: SITE_URL,
-        name: SITE_NAME,
-        description: DEFAULT_DESCRIPTION,
+        name,
+        ...(description ? { description } : {}),
         publisher: { "@id": `${SITE_URL}/#organization` },
         inLanguage: "en-GH",
       },

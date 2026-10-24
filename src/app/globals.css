@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  --font-display: var(--font-sans);
   --background: #ffffff;
   --foreground: #171717;
 
@@ -49,16 +50,25 @@
   --brand-line: color-mix(in oklab, var(--brand-secondary) 16%, transparent);
   --brand-line-soft: color-mix(in oklab, var(--brand-secondary) 9%, transparent);
 
-  /* Vertical rhythm. One spacious scale used by the `.section` utilities below so every
-     band on the site breathes at the same three sizes instead of ad-hoc py-24/py-28. */
-  --space-section: 7rem; /* 112px — standard band */
-  --space-section-lg: 9.5rem; /* 152px — feature band */
-  --space-section-sm: 4.5rem; /* 72px  — tight band */
 
   /* Apple's standard easing, plus a longer "exit" curve for scroll reveals. Every
      transition on the site pulls from these two so motion feels like one system. */
   --ease-brand: cubic-bezier(0.25, 0.1, 0.25, 1);
   --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Redesign palette (HW-1). Green does Bechtel's red job: actions and hovers. Blue
+     carries headings and the big panels. Both still follow the brand's Sanity colours. */
+  --hv-green: var(--brand-secondary);
+  --hv-green-dark: color-mix(in oklab, var(--brand-secondary) 78%, #000000);
+  --hv-green-faded: color-mix(in oklab, var(--brand-secondary) 18%, #ffffff);
+  --hv-green-light: color-mix(in oklab, var(--brand-secondary) 38%, #ffffff);
+  --hv-blue: var(--brand-primary);
+  --hv-tint: color-mix(in oklab, var(--brand-secondary) 8%, #ffffff);
+  --hv-ink: #1e1e1e;
+  --hv-body: #1f292d;
+  --hv-muted: #5f6e74;
+  --hv-line: #dcdcdc;
+  --hv-chip-line: color-mix(in oklab, var(--brand-secondary) 26%, #ffffff);
 }
 
 @theme inline {
@@ -66,6 +76,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
   --font-display: var(--font-display);
+  --font-mono: var(--font-mono);
 
   --color-brand-primary: var(--brand-primary);
   --color-brand-secondary: var(--brand-secondary);
@@ -117,12 +128,10 @@ html {
 body {
   background: var(--background);
   color: var(--foreground);
-  /* Roboto for body copy, Montserrat for headings — both loaded in app/layout.tsx.
-     next/font already appends its own metric-adjusted fallbacks to each variable;
-     the tail here covers the case where the variable itself is missing. */
-  font-family: var(--font-sans), "Helvetica Neue", Arial, ui-sans-serif, system-ui, sans-serif;
+  /* Apfel Grotezk throughout, Necto Mono for labels; both self-hosted in app/fonts. */
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  color: var(--hv-body);
   overflow-x: hidden;
-  /* Optical sizing + kerning make Montserrat's larger cuts noticeably tighter. */
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
@@ -131,9 +140,7 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-display), "Helvetica Neue", Arial, ui-sans-serif, system-ui, sans-serif;
-  /* Display sizes need negative tracking to stop Montserrat looking airy at 48px+. */
-  letter-spacing: -0.02em;
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
 }
 
 ::selection {
@@ -150,166 +157,8 @@ h4 {
 }
 
 /* ---------------------------------------------------------------------------
-   Vertical rhythm utilities
-   Every major band uses one of these three instead of hand-picked padding, so
-   section spacing is consistent across the whole site and tunable from one token.
-   --------------------------------------------------------------------------- */
-.section {
-  padding-block: var(--space-section);
-}
-
-.section-lg {
-  padding-block: var(--space-section-lg);
-}
-
-.section-sm {
-  padding-block: var(--space-section-sm);
-}
-
-@media (max-width: 640px) {
-  :root {
-    --space-section: 4.5rem;
-    --space-section-lg: 5.5rem;
-    --space-section-sm: 3rem;
-  }
-}
-
-/* ---------------------------------------------------------------------------
-   Background design
-   Three stackable, purely decorative layers. All are built from the brand hues at
-   very low alpha, so they add depth without introducing a colour.
-   --------------------------------------------------------------------------- */
-
-/* Blueprint grid — a nod to the survey/drawing side of the business. Two crossed
-   repeating-linear-gradients, masked to fade out at the edges so it never ends on a
-   hard line. */
-.hv-grid-bg {
-  position: relative;
-  isolation: isolate;
-}
-
-.hv-grid-bg::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    repeating-linear-gradient(
-      to right,
-      color-mix(in oklab, var(--brand-secondary) 9%, transparent) 0 1px,
-      transparent 1px 100%
-    ),
-    repeating-linear-gradient(
-      to bottom,
-      color-mix(in oklab, var(--brand-secondary) 9%, transparent) 0 1px,
-      transparent 1px 100%
-    );
-  background-size: 72px 72px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 0%, transparent 78%);
-}
-
-/* Soft colour wash — two large, very faint radial pools (navy and green) that give a
-   white section a sense of light without tinting it. */
-.hv-aura-bg {
-  position: relative;
-  isolation: isolate;
-}
-
-.hv-aura-bg::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    radial-gradient(
-      ellipse 46% 42% at 12% 8%,
-      color-mix(in oklab, var(--brand-secondary) 13%, transparent) 0%,
-      transparent 70%
-    ),
-    radial-gradient(
-      ellipse 44% 48% at 92% 88%,
-      color-mix(in oklab, var(--brand-primary) 8%, transparent) 0%,
-      transparent 70%
-    );
-}
-
-/* Fine grain. Breaks up the large flat white areas so gradients don't band on wide
-   displays. Kept as an inline SVG so there's no extra network request. */
-.hv-grain-bg {
-  position: relative;
-  isolation: isolate;
-}
-
-.hv-grain-bg::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.4;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
-}
-
-/* Hairline rule that fades at both ends — used between bands instead of a full-width
-   border, which always reads heavier than intended. */
-.hv-rule {
-  height: 1px;
-  border: 0;
-  background: linear-gradient(to right, transparent, var(--brand-line), transparent);
-}
-
-/* ---------------------------------------------------------------------------
-   Marquees
-   --------------------------------------------------------------------------- */
-
-/* Infinite client-logo marquee. The track renders its items twice, so translating it
-   exactly -50% lands the second copy where the first started — a seamless loop, no JS. */
-@keyframes hv-marquee {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
-}
-
-.hv-marquee-track {
-  animation: hv-marquee var(--hv-marquee-duration, 40s) linear infinite;
-  /* Promote once, up front — without this the browser re-rasterises the very wide
-     track on every frame of a long-running loop. */
-  will-change: transform;
-}
-
-/* Second row of a paired marquee — same keyframes, played backwards, so the two rows
-   slide in opposite directions. */
-.hv-marquee-track--reverse {
-  animation-direction: reverse;
-}
-
-.hv-marquee:hover .hv-marquee-track {
-  animation-play-state: paused;
-}
-
-/* ---------------------------------------------------------------------------
    Ambient motion
    --------------------------------------------------------------------------- */
-
-/* Slow drift for decorative background shapes. */
-@keyframes hv-float {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0);
-  }
-  50% {
-    transform: translate3d(0, -18px, 0);
-  }
-}
-
-.hv-float {
-  animation: hv-float var(--hv-float-duration, 9s) var(--ease-brand) infinite;
-}
 
 /* Light sweep across a surface — used on the header CTA and primary buttons. */
 @keyframes hv-sheen {
@@ -336,23 +185,6 @@ h4 {
   animation: hv-sheen 0.9s var(--ease-out-expo);
 }
 
-/* Scroll-hint chevron under the hero. */
-@keyframes hv-nudge {
-  0%,
-  100% {
-    transform: translateY(0);
-    opacity: 0.5;
-  }
-  50% {
-    transform: translateY(6px);
-    opacity: 1;
-  }
-}
-
-.hv-nudge {
-  animation: hv-nudge 2s var(--ease-brand) infinite;
-}
-
 /* ---------------------------------------------------------------------------
    Reduced motion
    One global opt-out. Anything decorative stops; nothing that carries meaning is
@@ -362,12 +194,6 @@ h4 {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  .hv-marquee-track,
-  .hv-float,
-  .hv-nudge {
-    animation: none;
   }
 
   .hv-sheen:hover::after {
@@ -382,4 +208,600 @@ h4 {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   Redesign components (HW-1)
+   Sizes and timings are the ones measured on the reference sites at 1440px:
+   Bechtel for the arrow button, nav pill and hover cards, EllisDon for the
+   header card, pills, chips and accordion, Turner for the grid lines and links.
+   --------------------------------------------------------------------------- */
+@layer components {
+.hv-wrap {
+  width: 100%;
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: 40px;
+}
+
+@media (max-width: 640px) {
+  .hv-wrap {
+    padding-inline: 20px;
+  }
+}
+
+.hv-mono {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  text-transform: uppercase;
+}
+
+.hv-h2 {
+  margin: 0;
+  font-weight: 400;
+  font-size: clamp(40px, 4.45vw, 64px);
+  line-height: 1.1;
+  color: var(--hv-blue);
+}
+
+.hv-h2x {
+  margin: 0;
+  font-weight: 400;
+  font-size: clamp(36px, 4.2vw, 60px);
+  line-height: 1.13;
+  letter-spacing: -0.04em;
+  color: var(--hv-blue);
+}
+
+.hv-h2x b {
+  font-weight: 700;
+}
+
+.hv-lead {
+  margin: 0;
+  font-size: 20px;
+  line-height: 30px;
+}
+
+.hv-dots {
+  background-image: radial-gradient(color-mix(in oklab, var(--brand-secondary) 28%, #ffffff) 1.3px, transparent 1.5px);
+  background-size: 30px 30px;
+}
+
+/* Bechtel arrow button: a 48px circle that grows into a pill on hover while the
+   arrow slides to the far end. */
+.hv-ab {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  height: 48px;
+  padding: 0 0 0 64px;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 48px;
+  color: var(--hv-green);
+  white-space: nowrap;
+  transition: all 0.3s ease-out;
+}
+
+.hv-ab::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  z-index: -1;
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  background: var(--hv-green);
+  transform: translateY(-50%);
+  transition: all 0.3s ease-out;
+}
+
+.hv-ab svg {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  width: 20px;
+  height: 20px;
+  color: #fff;
+  transition: left 0.3s ease-out;
+}
+
+.hv-ab:hover,
+.hv-ab:focus-visible {
+  color: #fff;
+  padding: 0 56px 0 28px;
+}
+
+.hv-ab:hover::before,
+.hv-ab:focus-visible::before {
+  width: 100%;
+}
+
+.hv-ab:hover svg,
+.hv-ab:focus-visible svg {
+  left: calc(100% - 34px);
+}
+
+.hv-ab.is-light {
+  color: #fff;
+}
+
+.hv-ab.is-invert {
+  color: #fff;
+}
+
+.hv-ab.is-invert::before {
+  background: #fff;
+}
+
+.hv-ab.is-invert svg {
+  color: var(--hv-green);
+}
+
+.hv-ab.is-invert:hover,
+.hv-ab.is-invert:focus-visible {
+  color: var(--hv-green);
+}
+
+.hv-ab.is-lg {
+  height: 56px;
+  line-height: 56px;
+  padding-left: 72px;
+}
+
+.hv-ab.is-lg::before {
+  width: 56px;
+  height: 56px;
+}
+
+.hv-ab.is-lg svg {
+  left: 18px;
+  top: 18px;
+}
+
+.hv-ab.is-lg:hover,
+.hv-ab.is-lg:focus-visible {
+  padding: 0 60px 0 28px;
+}
+
+.hv-ab.is-lg:hover::before,
+.hv-ab.is-lg:focus-visible::before {
+  width: 100%;
+}
+
+.hv-ab.is-lg:hover svg,
+.hv-ab.is-lg:focus-visible svg {
+  left: calc(100% - 38px);
+}
+
+/* EllisDon pills */
+.hv-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  height: 48px;
+  padding: 0 22px 0 26px;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  background: #fff;
+  color: var(--hv-blue);
+  font-weight: 600;
+  font-size: 17px;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    border-color 0.3s;
+}
+
+.hv-pill:hover {
+  background: var(--hv-green);
+  color: #fff;
+}
+
+.hv-pill.is-solid {
+  background: var(--hv-blue);
+  color: #fff;
+}
+
+.hv-pill.is-solid:hover {
+  background: var(--hv-green);
+}
+
+.hv-pill.is-ghost {
+  background: transparent;
+  color: #fff;
+  border-color: rgb(255 255 255 / 0.6);
+}
+
+.hv-pill.is-ghost:hover {
+  background: #fff;
+  color: var(--hv-blue);
+}
+
+.hv-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--hv-chip-line);
+  border-radius: 9999px;
+  background: #fff;
+  color: var(--hv-green);
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.hv-chip::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: currentColor;
+}
+
+/* Header */
+.hv-nav a {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  text-transform: uppercase;
+  font-size: 15px;
+  line-height: 24px;
+  padding: 8px 16px;
+  border-radius: 9999px;
+  color: var(--hv-ink);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.hv-nav a:hover,
+.hv-nav a[data-open="true"] {
+  background: var(--hv-green);
+  color: #fff;
+}
+
+.hv-burger {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--hv-tint);
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+
+.hv-burger span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--hv-ink);
+  transition:
+    background-color 0.25s,
+    transform 0.3s,
+    opacity 0.3s;
+}
+
+.hv-burger:hover {
+  background: var(--hv-green-dark);
+}
+
+.hv-burger:hover span {
+  background: #fff;
+}
+
+.hv-hbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 18px 0 22px;
+  border-radius: 9999px;
+  background: var(--hv-blue);
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background-color 0.3s;
+}
+
+.hv-hbtn:hover {
+  background: var(--hv-green);
+}
+
+/* Bechtel hero project card with the second card stacked behind it */
+.hv-hcard {
+  transition: all 0.25s ease;
+}
+
+.hv-hback {
+  transition:
+    height 0.25s ease,
+    top 0.25s ease;
+}
+
+.hv-hcard-wrap:hover .hv-hcard {
+  transform: scale(1.01);
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.1),
+    0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.hv-hcard-wrap:hover .hv-hback {
+  top: 6%;
+  height: 88%;
+}
+
+.hv-hlink {
+  transition: all 0.25s;
+}
+
+.hv-hcard:hover .hv-hlink {
+  background: var(--hv-green);
+  color: #fff;
+}
+
+.hv-hctl {
+  opacity: 0.75;
+  transition:
+    color 0.25s,
+    opacity 0.25s;
+}
+
+.hv-hctl:hover {
+  color: var(--hv-green-light);
+  opacity: 1;
+}
+
+.hv-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: #d1d5db;
+  transition: all 0.3s;
+}
+
+.hv-dot[data-on="true"] {
+  width: 18px;
+  background: var(--hv-green);
+}
+
+/* Cards with a photo: EllisDon division cards and Bechtel project cards. The text
+   moves up and the extra line fades in on hover. */
+.hv-photo-card {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  color: #fff;
+}
+
+.hv-photo-card:hover {
+  color: #fff;
+}
+
+.hv-photo-card img {
+  transition: transform 0.6s ease;
+}
+
+.hv-photo-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgb(0 0 0 / 0) 35%, rgb(0 0 0 / 0.7) 100%);
+  transition: background-color 0.4s ease-out;
+  pointer-events: none;
+}
+
+.hv-photo-card:hover::after {
+  background-color: rgb(0 0 0 / 0.42);
+}
+
+.hv-photo-card .hv-card-body {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 2;
+  transform: translateY(var(--hv-rise, 40px));
+  transition: transform 0.4s ease-out;
+}
+
+.hv-photo-card:hover .hv-card-body,
+.hv-photo-card:focus-visible .hv-card-body {
+  transform: translateY(0);
+}
+
+.hv-photo-card .hv-card-more {
+  opacity: 0;
+  transition: opacity 0.4s ease-out;
+}
+
+.hv-photo-card:hover .hv-card-more,
+.hv-photo-card:focus-visible .hv-card-more {
+  opacity: 1;
+}
+
+.hv-photo-card.is-zoom:hover img {
+  transform: scale(1.05);
+}
+
+.hv-photo-card .hv-card-icon {
+  z-index: 3;
+  transition: all 0.3s ease;
+}
+
+.hv-photo-card:hover .hv-card-icon.is-plus {
+  background: var(--hv-green);
+  color: #fff;
+}
+
+.hv-photo-card:hover .hv-card-icon.is-arrow {
+  background: var(--hv-green-dark);
+}
+
+@media (hover: none) {
+  .hv-photo-card .hv-card-body {
+    transform: none;
+  }
+
+  .hv-photo-card .hv-card-more {
+    opacity: 1;
+  }
+}
+
+/* EllisDon accordion */
+.hv-acc {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 24px 24px 24px 28px;
+  border: 0;
+  border-radius: 20px;
+  background: #fff;
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.hv-round {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--hv-blue);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.hv-acc:hover .hv-round,
+.hv-round:hover {
+  background: var(--hv-green);
+}
+
+.hv-cbtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--hv-green-faded);
+  color: var(--hv-green);
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.hv-cbtn:hover:not(:disabled) {
+  background: var(--hv-green);
+  color: #fff;
+}
+
+.hv-cbtn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* Turner grid lines and arrow links */
+.hv-vlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.hv-vlines i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--hv-line);
+}
+
+@media (max-width: 1000px) {
+  .hv-vlines {
+    display: none;
+  }
+}
+
+.hv-zoom {
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.hv-zoom img {
+  transition: transform 0.5s ease-in-out;
+}
+
+.hv-zoom:hover img {
+  transform: scale(1.1);
+}
+
+.hv-tlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  font-family: var(--font-mono), ui-monospace, monospace;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: var(--hv-muted);
+  transition: color 0.3s ease-in-out;
+}
+
+.hv-tlink svg {
+  color: var(--hv-green);
+}
+
+.hv-tlink:hover {
+  color: var(--hv-ink);
+}
+
+.hv-tlink:hover svg {
+  animation: hv-tnudge 1s ease-in-out infinite;
+}
+
+@keyframes hv-tnudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(8px);
+  }
+}
+
+.hv-flink {
+  color: #fff;
+  font-size: 16px;
+  line-height: 24px;
+  text-underline-offset: 4px;
+}
+
+.hv-flink:hover {
+  text-decoration: underline;
+}
+
+/* Bechtel: green scroll bar to match the line along the top of the page */
+html::-webkit-scrollbar {
+  width: 10px;
+}
+
+html::-webkit-scrollbar-track {
+  background: var(--hv-green-faded);
+}
+
+html::-webkit-scrollbar-thumb {
+  background: var(--hv-green);
+  border-radius: 10px;
+}
 }

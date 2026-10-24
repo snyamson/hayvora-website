@@ -1,46 +1,46 @@
 import type { ReactNode } from "react";
 
-import { safeFetch } from "../../../sanity/lib/client";
-import { BRAND_BY_SLUG_QUERY, SITE_SETTINGS_QUERY } from "../../../sanity/lib/queries";
-import { Footer } from "@/components/layout/Footer";
-import { Header } from "@/components/layout/Header";
+import { urlFor } from "../../../sanity/lib/image";
 import { PageTransition } from "@/components/PageTransition";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { ClosingCard } from "@/components/site/ClosingCard";
+import { SiteFooter } from "@/components/site/SiteFooter";
+import { SiteHeader } from "@/components/site/SiteHeader";
 import { getBrandThemeStyle } from "@/lib/brandHelpers";
-import { GLOBAL_NAV_ITEMS, SUBSIDIARY_SLUGS } from "@/lib/brands";
-import { FALLBACK_BRANDS, FALLBACK_SITE_SETTINGS } from "@/lib/fallbackContent";
+import { getChrome } from "@/lib/chrome";
 import { organizationSchema } from "@/lib/structuredData";
-import type { BrandDoc, SiteSettingsDoc } from "@/types/sanity";
 
 export default async function HoldingsLayout({ children }: { children: ReactNode }) {
-  const [brand, siteSettings] = await Promise.all([
-    safeFetch<BrandDoc>(BRAND_BY_SLUG_QUERY, { slug: "holdings" }, ["brand", "brand:holdings"]),
-    safeFetch<SiteSettingsDoc>(SITE_SETTINGS_QUERY, {}, ["siteSettings"]),
-  ]);
-
-  const resolvedBrand = brand ?? FALLBACK_BRANDS.holdings;
-  const resolvedSiteSettings = siteSettings ?? FALLBACK_SITE_SETTINGS;
+  const { settings, holdings, logo, divisions, projects } = await getChrome();
+  const closing = settings?.closingCta;
 
   return (
-    <div className="flex min-h-screen flex-col" style={getBrandThemeStyle(resolvedBrand)}>
+    <div className="flex min-h-screen flex-col" style={getBrandThemeStyle(holdings ?? undefined)}>
       <JsonLd
         data={organizationSchema(
-          siteSettings ?? undefined,
-          SUBSIDIARY_SLUGS.map((slug) => ({ name: FALLBACK_BRANDS[slug].name, slug })),
+          settings ?? undefined,
+          divisions.map((d) => ({ name: d.name, slug: d.slug })),
         )}
       />
-      <Header navItems={GLOBAL_NAV_ITEMS} ctaLabel="Contact Us" ctaHref="/contact" />
+      <SiteHeader
+        logo={logo}
+        header={settings?.header}
+        menu={settings?.divisionsMenu}
+        divisions={divisions}
+        projects={projects}
+      />
       <main className="flex-1">
         <PageTransition>{children}</PageTransition>
       </main>
-      <Footer
-        footerText={resolvedSiteSettings.footerText}
-        links={[...GLOBAL_NAV_ITEMS, { label: "Contact", href: "/contact" }]}
-        email={resolvedSiteSettings.contactInfo?.email}
-        phone={resolvedSiteSettings.contactInfo?.phone}
-        whatsapp={resolvedSiteSettings.contactInfo?.whatsapp}
-        socialLinks={resolvedSiteSettings.socialLinks}
+      <ClosingCard
+        eyebrow={closing?.eyebrow}
+        heading={closing?.heading}
+        body={closing?.body}
+        primary={closing?.primaryCta}
+        secondary={closing?.secondaryCta}
+        imageUrl={closing?.image?.asset ? urlFor(closing.image).width(1800).url() : undefined}
       />
+      <SiteFooter logo={logo} settings={settings} divisions={divisions} />
     </div>
   );
 }

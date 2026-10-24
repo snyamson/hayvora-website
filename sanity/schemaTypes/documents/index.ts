@@ -9,3 +9,6 @@ export { teamMember } from "./teamMember";
 export { service } from "./service";
 export { client } from "./client";
 export { homeGallery } from "./homeGallery";
+export { homePage } from "./homePage";
+export { divisionPage } from "./divisionPage";
+export { pageText } from "./pageText";

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
 import { urlFor } from "../../sanity/lib/image";
-import type { SanityImage } from "@/types/sanity";
+import { getSiteSettings } from "@/lib/content";
+import type { SanityImage, SeoMetaDoc } from "@/types/sanity";
 
 /**
  * Canonical origin for the site. Every absolute URL (canonicals, sitemap, OG tags,
@@ -13,12 +14,6 @@ import type { SanityImage } from "@/types/sanity";
  * change this at the same time.
  */
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.hayvora.com").replace(/\/$/, "");
-
-export const SITE_NAME = "Hayvora Holdings Limited";
-
-export const DEFAULT_DESCRIPTION =
-  "Hayvora Holdings Limited delivers civil and architectural construction, land surveying and " +
-  "geospatial consulting, and climate-smart agricultural systems across Ghana and West Africa.";
 
 export function absoluteUrl(path = "/") {
   return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
@@ -37,9 +32,9 @@ export function ogImageUrl(image: SanityImage | undefined) {
 /**
  * Builds a page's Metadata with canonical URL, Open Graph and Twitter cards filled in
  * consistently. Sanity `seoMeta` values win when an editor has set them; otherwise the
- * page's own title/description are used.
+ * page's own title/description are used, then the site defaults from Site Settings.
  */
-export function buildMetadata({
+export async function buildMetadata({
   title,
   description,
   path,
@@ -48,36 +43,40 @@ export function buildMetadata({
   type = "website",
   noIndex = false,
 }: {
-  title: string;
+  title?: string;
   description?: string;
   path: string;
   image?: string;
-  seo?: { metaTitle?: string; metaDescription?: string; ogImage?: SanityImage };
+  seo?: SeoMetaDoc;
   type?: "website" | "article";
   noIndex?: boolean;
-}): Metadata {
+}): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const siteName = settings?.companyName ?? settings?.title;
   const resolvedTitle = seo?.metaTitle ?? title;
-  const resolvedDescription = seo?.metaDescription ?? description ?? DEFAULT_DESCRIPTION;
-  const resolvedImage = ogImageUrl(seo?.ogImage) ?? image;
+  const shareTitle = resolvedTitle ?? siteName;
+  const resolvedDescription = seo?.metaDescription ?? description ?? settings?.defaultSeo?.metaDescription;
+  const resolvedImage = ogImageUrl(seo?.ogImage) ?? image ?? ogImageUrl(settings?.defaultSeo?.ogImage);
   const url = absoluteUrl(path);
 
   return {
-    title: resolvedTitle,
+    // No title of its own: keep the layout's default instead of "Name | Name".
+    ...(resolvedTitle ? { title: resolvedTitle } : {}),
     description: resolvedDescription,
     alternates: { canonical: url },
     ...(noIndex ? { robots: { index: false, follow: false } } : {}),
     openGraph: {
-      title: resolvedTitle,
+      title: shareTitle,
       description: resolvedDescription,
       url,
-      siteName: SITE_NAME,
+      siteName,
       locale: "en_GH",
       type,
-      ...(resolvedImage ? { images: [{ url: resolvedImage, width: 1200, height: 630, alt: resolvedTitle }] } : {}),
+      ...(resolvedImage ? { images: [{ url: resolvedImage, width: 1200, height: 630, alt: shareTitle }] } : {}),
     },
     twitter: {
       card: "summary_large_image",
-      title: resolvedTitle,
+      title: shareTitle,
       description: resolvedDescription,
       ...(resolvedImage ? { images: [resolvedImage] } : {}),
     },

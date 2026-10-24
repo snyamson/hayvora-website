@@ -7,7 +7,10 @@ export type ColorTokenDoc = { label?: string; hex?: string };
 /** Editor-authored SEO overrides (sanity/schemaTypes/objects/seoMeta.ts). */
 export type SeoMetaDoc = { metaTitle?: string; metaDescription?: string; ogImage?: SanityImage };
 
-export type LogoAssetDoc = { variant: "primary" | "reversed" | "mark" | "favicon"; image: SanityImage };
+export type LogoAssetDoc = {
+  variant: "primary" | "reversed" | "mark" | "wordmark" | "stacked" | "favicon";
+  image: SanityImage;
+};
 
 export type BrandDoc = {
   _id: string;
@@ -46,7 +49,7 @@ export type BrandDoc = {
   narrativeImage?: SanityImage;
   about?: unknown;
   stats?: { value: string; label: string }[];
-  process?: { title: string; description?: string }[];
+  process?: { title: string; description?: string; image?: SanityImage }[];
   enabledModules?: string[];
   orderRank?: number;
   seo?: SeoMetaDoc;
@@ -61,6 +64,7 @@ export type DivisionProfileDoc = {
   mission?: string;
   values?: { title: string; description?: string }[];
   servicesHeading?: string;
+  servicesHeadingEmphasis?: string;
   servicesIntro?: string;
   services?: { title: string; description?: string; items?: string[]; image?: SanityImage }[];
   clients?: string[];
@@ -72,6 +76,7 @@ export type HomeGalleryDoc = {
   _id: string;
   eyebrow?: string;
   heading?: string;
+  link?: LinkDoc;
   images?: (SanityImage & { alt?: string; caption?: string })[];
 };
 
@@ -141,9 +146,201 @@ export type ServiceDoc = {
   shortDescription?: string;
 };
 
+/** sanity/schemaTypes/objects/linkItem.ts */
+export type LinkDoc = { label?: string; href?: string };
+
+/** sanity/schemaTypes/objects/sectionIntro.ts */
+export type SectionIntroDoc = { eyebrow?: string; heading?: string; headingEmphasis?: string; description?: string };
+
+type CardCopy = {
+  eyebrow?: string;
+  heading?: string;
+  body?: string;
+  primaryCta?: LinkDoc;
+  secondaryCta?: LinkDoc;
+  image?: SanityImage;
+};
+
 export type SiteSettingsDoc = {
   title?: string;
-  contactInfo?: { email?: string; phone?: string; whatsapp?: string };
+  companyName?: string;
+  contactInfo?: {
+    email?: string;
+    phone?: string;
+    whatsapp?: string;
+    address?: { line1?: string; city?: string; region?: string; country?: string };
+  };
   socialLinks?: { platform: string; url: string }[];
   footerText?: string;
+  header?: {
+    navItems?: { _key: string; label?: string; href?: string; opensDivisionsMenu?: boolean }[];
+    cta?: LinkDoc;
+    openMenuLabel?: string;
+    closeMenuLabel?: string;
+  };
+  divisionsMenu?: {
+    eyebrow?: string;
+    heading?: string;
+    body?: string;
+    cta?: LinkDoc;
+    featuredHeading?: string;
+    featuredLink?: LinkDoc;
+  };
+  closingCta?: CardCopy;
+  footer?: {
+    headquartersLabel?: string;
+    exploreHeading?: string;
+    exploreLinks?: (LinkDoc & { _key: string })[];
+    divisionsHeading?: string;
+    contactHeading?: string;
+    whatsappLabel?: string;
+    enquiryLink?: LinkDoc;
+    rightsText?: string;
+    locationText?: string;
+    backToTopLabel?: string;
+  };
+  labels?: {
+    home?: string;
+    breadcrumb?: string;
+    previous?: string;
+    next?: string;
+    counter?: string;
+    goToSlide?: string;
+    close?: string;
+    scroll?: string;
+  };
+  defaultSeo?: SeoMetaDoc;
+  titleSuffix?: string;
+  keywords?: string[];
+};
+
+/** sanity/schemaTypes/documents/homePage.ts */
+export type HomePageDoc = {
+  statement?: { text?: string; cta?: LinkDoc };
+  metrics?: SectionIntroDoc;
+  divisions?: SectionIntroDoc;
+  divisionCardLabel?: string;
+  narrative?: { heading?: string; body?: string; cta?: LinkDoc };
+  process?: { intro?: SectionIntroDoc; cta?: LinkDoc };
+  featuredProjects?: { heading?: string; cta?: LinkDoc; emptyText?: string };
+  properties?: { intro?: SectionIntroDoc; cardLinkLabel?: string; cta?: LinkDoc; emptyText?: string };
+  seo?: SeoMetaDoc;
+};
+
+/** sanity/schemaTypes/documents/divisionPage.ts */
+export type DivisionPageDoc = {
+  overviewCta?: LinkDoc;
+  visionLabel?: string;
+  missionLabel?: string;
+  servicesEyebrow?: string;
+  valuesIntro?: SectionIntroDoc;
+  clientsIntro?: SectionIntroDoc;
+  zoneEyebrow?: string;
+  projects?: { heading?: string; cta?: LinkDoc; emptyText?: string };
+  closing?: CardCopy;
+};
+
+type Strings<K extends string> = Partial<Record<K, string>>;
+
+/** sanity/schemaTypes/documents/pageText.ts */
+export type PageTextDoc = {
+  about?: Strings<"eyebrow" | "divisionEyebrow"> & { seo?: SeoMetaDoc };
+  contact?: Strings<
+    | "eyebrow"
+    | "title"
+    | "description"
+    | "divisionTitle"
+    | "directHeading"
+    | "directBody"
+    | "divisionDirectBody"
+    | "emailLabel"
+    | "phoneLabel"
+    | "whatsappLabel"
+    | "officeLabel"
+  > & { seo?: SeoMetaDoc };
+  properties?: Strings<
+    | "eyebrow"
+    | "availableTitle"
+    | "soldTitle"
+    | "description"
+    | "allLabel"
+    | "viewAvailableLabel"
+    | "viewSoldLabel"
+    | "emptyAvailable"
+    | "emptySold"
+    | "statusAvailable"
+    | "statusReserved"
+    | "statusSold"
+    | "bedroomsLabel"
+    | "bathroomsLabel"
+    | "floorAreaLabel"
+    | "landSizeLabel"
+    | "bedUnit"
+    | "bathUnit"
+    | "areaUnit"
+    | "landUnit"
+    | "soldNoticeTitle"
+    | "soldNoticeBody"
+    | "notFoundTitle"
+    | "detailDescription"
+  > & { seo?: SeoMetaDoc };
+  projects?: Strings<
+    | "eyebrow"
+    | "title"
+    | "description"
+    | "emptyText"
+    | "clientLabel"
+    | "locationLabel"
+    | "durationLabel"
+    | "yearLabel"
+    | "viewLabel"
+    | "viewFullLabel"
+    | "ctaHeading"
+    | "ctaBody"
+    | "ctaLabel"
+    | "notFoundTitle"
+  >;
+  services?: Strings<
+    | "eyebrow"
+    | "title"
+    | "description"
+    | "emptyText"
+    | "learnMoreLabel"
+    | "fullListLabel"
+    | "detailEyebrow"
+    | "ctaHeading"
+    | "ctaBody"
+    | "ctaLabel"
+    | "notFoundTitle"
+  >;
+  gallery?: Strings<"eyebrow" | "title" | "description" | "emptyText" | "imageAlt">;
+  form?: Strings<
+    | "regardingLabel"
+    | "nameLabel"
+    | "emailLabel"
+    | "phoneLabel"
+    | "messageLabel"
+    | "optionalHint"
+    | "submitViewing"
+    | "submitService"
+    | "submitContact"
+    | "sendingLabel"
+    | "successTitle"
+    | "successBody"
+    | "nameRequired"
+    | "emailInvalid"
+    | "phoneRequired"
+    | "sendError"
+    | "networkError"
+  >;
+  email?: Strings<
+    | "viewingSubject"
+    | "generalSubject"
+    | "typeLabel"
+    | "propertyLabel"
+    | "nameLabel"
+    | "emailLabel"
+    | "phoneLabel"
+    | "messageLabel"
+  >;
 };

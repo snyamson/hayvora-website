@@ -1,7 +1,7 @@
 import type { StructureResolver } from "sanity/structure";
 
 const BRAND_SLUGS = [
-  { slug: "holdings", title: "Hayvora Holdings" },
+  { slug: "holdings", title: "Hayvora Limited" },
   { slug: "infrastructure", title: "Infrastructure" },
   { slug: "jhm-geo-consult", title: "JHM Geo Consult" },
   { slug: "agrisystem-analytics", title: "AgriSystem & Analytics" },
@@ -23,8 +23,20 @@ export const structure: StructureResolver = (S) =>
         .child(S.document().schemaType("siteSettings").documentId("siteSettings")),
 
       S.listItem()
+        .title("Home page")
+        .child(S.document().schemaType("homePage").documentId("homePage")),
+
+      S.listItem()
         .title("Home Gallery")
         .child(S.document().schemaType("homeGallery").documentId("homeGallery")),
+
+      S.listItem()
+        .title("Division pages")
+        .child(S.document().schemaType("divisionPage").documentId("divisionPage")),
+
+      S.listItem()
+        .title("Page text")
+        .child(S.document().schemaType("pageText").documentId("pageText")),
 
       S.divider(),
 
@@ -100,6 +112,9 @@ export const structure: StructureResolver = (S) =>
             "service",
             "client",
             "homeGallery",
+            "homePage",
+            "divisionPage",
+            "pageText",
           ].includes(item.getId() ?? ""),
       ),
     ]);

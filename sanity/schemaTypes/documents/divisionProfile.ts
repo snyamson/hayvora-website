@@ -65,7 +65,13 @@ export const divisionProfile = defineType({
     defineField({
       name: "servicesHeading",
       title: "Services section heading",
-      description: 'e.g. "Tailored infrastructure solutions".',
+      description: 'e.g. "Tailored".',
+      type: "string",
+    }),
+    defineField({
+      name: "servicesHeadingEmphasis",
+      title: "Services section heading, bold part",
+      description: 'Shown in bold right after the heading, e.g. "infrastructure solutions".',
       type: "string",
     }),
     defineField({

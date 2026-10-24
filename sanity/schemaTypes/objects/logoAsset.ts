@@ -14,6 +14,8 @@ export const logoAsset = defineType({
           { title: "Primary (full color, light background)", value: "primary" },
           { title: "Reversed (white, dark background)", value: "reversed" },
           { title: "Mark / icon only", value: "mark" },
+          { title: "Wordmark (sits beside the mark in the header)", value: "wordmark" },
+          { title: "Stacked, cropped (footer)", value: "stacked" },
           { title: "Favicon", value: "favicon" },
         ],
       },

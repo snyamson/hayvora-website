@@ -37,7 +37,8 @@ export async function POST(request: Request) {
     revalidatePath("/properties");
     if (slug) revalidatePath(`/properties/${slug}`);
   }
-  if (type === "brand" || type === "siteSettings") {
+  // These feed the shared header, footer and closing cards, so every page can change.
+  if (["brand", "siteSettings", "homePage", "divisionPage", "pageText"].includes(type)) {
     revalidatePath("/", "layout");
   }
 

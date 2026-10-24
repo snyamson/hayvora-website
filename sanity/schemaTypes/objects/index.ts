@@ -6,3 +6,5 @@ export { seoMeta } from "./seoMeta";
 export { address } from "./address";
 export { socialLink } from "./socialLink";
 export { propertySpecs } from "./propertySpecs";
+export { linkItem } from "./linkItem";
+export { sectionIntro } from "./sectionIntro";

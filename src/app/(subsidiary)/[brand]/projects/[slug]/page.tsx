@@ -2,29 +2,30 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 
 import { safeFetch } from "../../../../../../sanity/lib/client";
-import { PROJECT_BY_SLUG_QUERY } from "../../../../../../sanity/lib/queries";
+import { BRAND_BY_SLUG_QUERY, PROJECT_BY_SLUG_QUERY } from "../../../../../../sanity/lib/queries";
 import { urlFor } from "../../../../../../sanity/lib/image";
-import { Button } from "@/components/ui/Button";
-import { Container } from "@/components/ui/Container";
-import { ClipReveal, Reveal, Stagger, StaggerItem } from "@/components/ui/Motion";
-import { DIVISION_ART } from "@/components/ui/BlueprintArt";
-import { PageHero } from "@/components/layout/PageHero";
+import { PillLink } from "@/components/site/Actions";
+import { PageBanner } from "@/components/site/division/DivisionSections";
+import { Reveal } from "@/components/ui/Motion";
 import { PortableText } from "@/components/portable-text/PortableText";
 import { isSubsidiarySlug } from "@/lib/brands";
-import { FALLBACK_BRANDS } from "@/lib/fallbackContent";
+import { divisionHref, fill, getPageText, getSiteSettings } from "@/lib/content";
+import { crumbsFor } from "@/lib/pageContext";
 import { getProjectHero } from "@/lib/projectHelpers";
-import type { ProjectDoc } from "@/types/sanity";
 import { buildMetadata, ogImageUrl } from "@/lib/seo";
+import type { BrandDoc, ProjectDoc } from "@/types/sanity";
+
+const fetchProject = (slug: string) =>
+  safeFetch<ProjectDoc & { description?: unknown }>(PROJECT_BY_SLUG_QUERY, { slug }, ["project", `project:${slug}`]);
 
 export async function generateMetadata({ params }: { params: Promise<{ brand: string; slug: string }> }) {
   const { brand: brandSlug, slug } = await params;
   if (!isSubsidiarySlug(brandSlug)) return {};
-
-  const project = await safeFetch<ProjectDoc>(PROJECT_BY_SLUG_QUERY, { slug }, ["project", `project:${slug}`]);
-  if (!project) return { title: "Project not found" };
+  const [project, text] = await Promise.all([fetchProject(slug), getPageText()]);
+  if (!project) return { title: text?.projects?.notFoundTitle };
 
   return buildMetadata({
-    title: project.location ? `${project.title} — ${project.location}` : project.title,
+    title: [project.title, project.location].filter(Boolean).join(" — "),
     description: project.summary,
     path: `/${brandSlug}/projects/${slug}`,
     image: ogImageUrl(project.coverImage),
@@ -32,51 +33,48 @@ export async function generateMetadata({ params }: { params: Promise<{ brand: st
   });
 }
 
-export default async function ProjectDetailPage({
-  params,
-}: {
-  params: Promise<{ brand: string; slug: string }>;
-}) {
+export default async function ProjectDetailPage({ params }: { params: Promise<{ brand: string; slug: string }> }) {
   const { brand: brandSlug, slug } = await params;
   if (!isSubsidiarySlug(brandSlug)) notFound();
 
-  const project = await safeFetch<ProjectDoc & { description?: unknown; gallery?: { asset?: unknown }[] }>(
-    PROJECT_BY_SLUG_QUERY,
-    { slug },
-    ["project", `project:${slug}`],
-  );
+  const [project, brand, text, settings] = await Promise.all([
+    fetchProject(slug),
+    safeFetch<BrandDoc>(BRAND_BY_SLUG_QUERY, { slug: brandSlug }, ["brand", `brand:${brandSlug}`]),
+    getPageText(),
+    getSiteSettings(),
+  ]);
+  if (!project || !brand) notFound();
 
-  if (!project) notFound();
-
+  const t = text?.projects;
   const hero = getProjectHero(project);
-  const brandName = FALLBACK_BRANDS[brandSlug]?.name ?? brandSlug;
-
   const facts = [
-    project.client && { label: "Client", value: project.client },
-    project.location && { label: "Location", value: project.location },
-    project.duration && { label: "Duration", value: project.duration },
-    project.year && { label: "Year", value: String(project.year) },
-  ].filter(Boolean) as { label: string; value: string }[];
+    project.client && { label: t?.clientLabel, value: project.client },
+    project.location && { label: t?.locationLabel, value: project.location },
+    project.duration && { label: t?.durationLabel, value: project.duration },
+    project.year && { label: t?.yearLabel, value: String(project.year) },
+  ].filter(Boolean) as { label?: string; value: string }[];
+  const { crumbs, crumbLabel } = await crumbsFor([
+    { label: brand.name, href: `/${brandSlug}` },
+    { label: t?.title ?? "", href: `/${brandSlug}/projects` },
+    { label: project.title },
+  ]);
 
   return (
     <>
-      <PageHero
-        art={DIVISION_ART[brandSlug]?.primary}
-        secondaryArt={DIVISION_ART[brandSlug]?.secondary}
-        eyebrow={project.category?.[0] ?? "Project"}
-        title={project.title}
+      <PageBanner
+        short
+        crumbs={crumbs}
+        crumbLabel={crumbLabel}
+        eyebrow={project.category?.[0]}
+        heading={project.title}
         description={project.summary}
-        breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: brandName, href: `/${brandSlug}` },
-          { label: "Projects", href: `/${brandSlug}/projects` },
-        ]}
+        imageUrl={project.coverImage?.asset ? urlFor(project.coverImage).width(1920).url() : undefined}
       />
 
-      <section className="hv-aura-bg section relative">
-        <Container className="max-w-4xl">
+      <section className="py-24">
+        <div className="mx-auto max-w-[960px] px-5 sm:px-10">
           {hero && (
-            <ClipReveal className="relative aspect-video w-full overflow-hidden rounded-card bg-brand-tint-deep shadow-lift">
+            <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-[var(--hv-tint)]">
               {hero.type === "video" ? (
                 <video
                   src={hero.videoUrl}
@@ -94,31 +92,23 @@ export default async function ProjectDetailPage({
                   src={hero.imageUrl}
                   alt={project.title}
                   fill
-                  sizes="(min-width: 1024px) 56rem, 100vw"
-                  // Next 16 deprecates `priority` in favour of explicit loading hints.
+                  sizes="(min-width: 1024px) 60rem, 100vw"
                   loading="eager"
-                  fetchPriority="high"
                   className="object-cover"
                 />
               )}
-            </ClipReveal>
+            </div>
           )}
 
           {facts.length > 0 && (
-            <Stagger
-              as="dl"
-              gap={0.08}
-              className="mt-12 grid grid-cols-2 gap-x-6 gap-y-8 border-y border-brand-line-soft py-8 sm:grid-cols-4"
-            >
+            <dl className="mt-12 grid grid-cols-2 gap-x-6 gap-y-8 border-y border-[var(--hv-line)] py-8 sm:grid-cols-4">
               {facts.map((fact) => (
-                <StaggerItem key={fact.label} y={14}>
-                  <dt className="font-display text-[0.6875rem] font-bold tracking-[0.15em] text-brand-ink/45 uppercase">
-                    {fact.label}
-                  </dt>
-                  <dd className="mt-2 text-sm font-medium text-brand-ink/85">{fact.value}</dd>
-                </StaggerItem>
+                <div key={fact.value}>
+                  <dt className="hv-mono text-xs tracking-[0.06em] text-[var(--hv-muted)]">{fact.label}</dt>
+                  <dd className="mt-2 text-lg text-[var(--hv-blue)]">{fact.value}</dd>
+                </div>
               ))}
-            </Stagger>
+            </dl>
           )}
 
           <Reveal delay={0.1} className="mt-12">
@@ -126,39 +116,25 @@ export default async function ProjectDetailPage({
           </Reveal>
 
           {project.gallery && project.gallery.length > 0 && (
-            <Stagger gap={0.06} className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3">
+            <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3">
               {project.gallery.map((img, i) => (
-                <StaggerItem key={i} y={20}>
-                  <div className="group relative aspect-square overflow-hidden rounded-card shadow-soft">
-                    <Image
-                      src={urlFor(img).width(500).height(500).url()}
-                      alt=""
-                      fill
-                      sizes="(min-width: 640px) 18rem, 45vw"
-                      className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)] group-hover:scale-105"
-                    />
-                  </div>
-                </StaggerItem>
+                <div key={i} className="hv-zoom relative aspect-square">
+                  <Image src={urlFor(img).width(500).height(500).url()} alt={img.alt ?? ""} fill sizes="(min-width: 640px) 18rem, 45vw" className="object-cover" />
+                </div>
               ))}
-            </Stagger>
+            </div>
           )}
 
-          <Reveal delay={0.1}>
-            <div className="mt-16 flex flex-wrap items-center gap-4 rounded-card border border-brand-line-soft bg-white p-8 shadow-soft">
+          {t?.ctaHeading && (
+            <div className="mt-16 flex flex-wrap items-center gap-6 rounded-[20px] bg-[var(--hv-blue)] p-8 text-white sm:p-10">
               <div className="flex-1">
-                <p className="font-display text-lg font-semibold tracking-tight text-brand-ink">
-                  Planning something similar?
-                </p>
-                <p className="mt-1.5 text-sm text-brand-ink/65">
-                  {brandName} can walk you through how this one was delivered.
-                </p>
+                <p className="text-2xl font-bold tracking-[-0.03em]">{t.ctaHeading}</p>
+                <p className="mt-2 text-base text-white/85">{fill(t.ctaBody, { division: brand.name })}</p>
               </div>
-              <Button href={`/${brandSlug}/contact`} variant="secondary" withArrow>
-                Start a conversation
-              </Button>
+              <PillLink link={{ label: t.ctaLabel, href: divisionHref(settings?.header?.cta?.href, brandSlug) }} />
             </div>
-          </Reveal>
-        </Container>
+          )}
+        </div>
       </section>
     </>
   );

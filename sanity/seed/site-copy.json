@@ -1,0 +1,444 @@
+{
+  "siteSettings": {
+    "title": "Hayvora Limited",
+    "companyName": "Hayvora Limited",
+    "header": {
+      "navItems": [
+        {
+          "_key": "home",
+          "_type": "navItem",
+          "label": "Home",
+          "href": "/",
+          "opensDivisionsMenu": false
+        },
+        {
+          "_key": "about",
+          "_type": "navItem",
+          "label": "About",
+          "href": "/about",
+          "opensDivisionsMenu": false
+        },
+        {
+          "_key": "divisions",
+          "_type": "navItem",
+          "label": "Divisions",
+          "href": "/#divisions",
+          "opensDivisionsMenu": true
+        },
+        {
+          "_key": "properties",
+          "_type": "navItem",
+          "label": "Properties",
+          "href": "/properties",
+          "opensDivisionsMenu": false
+        }
+      ],
+      "cta": {
+        "_type": "linkItem",
+        "label": "Contact us",
+        "href": "/contact"
+      },
+      "openMenuLabel": "Open menu",
+      "closeMenuLabel": "Close menu"
+    },
+    "divisionsMenu": {
+      "eyebrow": "Our divisions",
+      "heading": "Three specialist divisions, one standard of excellence",
+      "body": "Each division runs its own specialists and equipment — and shares a single point of contact, so a project never falls between them.",
+      "cta": {
+        "_type": "linkItem",
+        "label": "All divisions",
+        "href": "/#divisions"
+      },
+      "featuredHeading": "Featured projects",
+      "featuredLink": {
+        "_type": "linkItem",
+        "label": "See all projects",
+        "href": "/#projects"
+      }
+    },
+    "closingCta": {
+      "eyebrow": "Start a project",
+      "heading": "Let’s build something that lasts.",
+      "body": "Tell us what you’re planning — a build, a survey, a farm system — and we’ll point you at the right division and the right team.",
+      "primaryCta": {
+        "_type": "linkItem",
+        "label": "Get in touch",
+        "href": "/contact"
+      },
+      "secondaryCta": {
+        "_type": "linkItem",
+        "label": "View properties",
+        "href": "/properties"
+      },
+      "image": {
+        "_type": "image",
+        "asset": {
+          "_type": "reference",
+          "_ref": "image-ec8cac27cd4af7893d00733639476c733215e99e-1080x810-jpg"
+        }
+      }
+    },
+    "footer": {
+      "headquartersLabel": "Headquarters",
+      "exploreHeading": "Explore",
+      "exploreLinks": [
+        {
+          "_key": "home",
+          "_type": "linkItem",
+          "label": "Home",
+          "href": "/"
+        },
+        {
+          "_key": "about",
+          "_type": "linkItem",
+          "label": "About",
+          "href": "/about"
+        },
+        {
+          "_key": "divisions",
+          "_type": "linkItem",
+          "label": "Divisions",
+          "href": "/#divisions"
+        },
+        {
+          "_key": "properties",
+          "_type": "linkItem",
+          "label": "Properties",
+          "href": "/properties"
+        },
+        {
+          "_key": "contact",
+          "_type": "linkItem",
+          "label": "Contact",
+          "href": "/contact"
+        }
+      ],
+      "divisionsHeading": "Divisions",
+      "contactHeading": "Contact",
+      "whatsappLabel": "WhatsApp",
+      "enquiryLink": {
+        "_type": "linkItem",
+        "label": "Send an enquiry",
+        "href": "/contact"
+      },
+      "rightsText": "All rights reserved.",
+      "locationText": "Accra, Ghana",
+      "backToTopLabel": "Back to top"
+    },
+    "labels": {
+      "home": "Home",
+      "breadcrumb": "Breadcrumb",
+      "previous": "Previous",
+      "next": "Next",
+      "counter": "{from} – {to} of {total}",
+      "goToSlide": "Go to slide {n}",
+      "close": "Close",
+      "scroll": "Scroll"
+    },
+    "titleSuffix": "Construction, Surveying & Agricultural Systems in Ghana",
+    "keywords": [
+      "construction company Ghana",
+      "civil engineering Ghana",
+      "architectural construction Accra",
+      "land surveying Ghana",
+      "drone mapping Ghana",
+      "GIS consulting West Africa",
+      "greenhouse construction Ghana",
+      "property listings Ghana",
+      "Hayvora Limited"
+    ],
+    "defaultSeo": {
+      "_type": "seoMeta",
+      "metaTitle": "Hayvora Limited",
+      "metaDescription": "Hayvora Limited delivers civil and architectural construction, land surveying and geospatial consulting, and climate-smart agricultural systems across Ghana and West Africa."
+    }
+  },
+  "homePage": {
+    "statement": {
+      "text": "Multidisciplinary civil and architectural construction delivering durable builds — the parent company behind Infrastructure, JHM Geo Consult, and AgriSystem & Analytics.",
+      "cta": {
+        "_type": "linkItem",
+        "label": "Contact us",
+        "href": "/contact"
+      }
+    },
+    "metrics": {
+      "_type": "sectionIntro",
+      "eyebrow": "Key metrics",
+      "heading": "Delivering projects",
+      "headingEmphasis": "across Ghana and beyond"
+    },
+    "divisions": {
+      "_type": "sectionIntro",
+      "eyebrow": "Our divisions",
+      "heading": "Three specialist divisions,",
+      "headingEmphasis": "one standard of excellence",
+      "description": "Each division runs its own specialists and equipment — and shares a single point of contact, so a project never falls between them."
+    },
+    "divisionCardLabel": "View their work",
+    "narrative": {
+      "heading": "One holding company. Three specialist divisions.",
+      "body": "One point of contact for every project, from ground survey to final handover.",
+      "cta": {
+        "_type": "linkItem",
+        "label": "About Hayvora",
+        "href": "/about"
+      }
+    },
+    "process": {
+      "intro": {
+        "_type": "sectionIntro",
+        "eyebrow": "How we work",
+        "heading": "Our",
+        "headingEmphasis": "process",
+        "description": "Three stages, the same on every job — so you always know what happens next."
+      },
+      "cta": {
+        "_type": "linkItem",
+        "label": "Get in touch",
+        "href": "/contact"
+      }
+    },
+    "featuredProjects": {
+      "heading": "Featured projects",
+      "cta": {
+        "_type": "linkItem",
+        "label": "Browse by division",
+        "href": "/#divisions"
+      },
+      "emptyText": "Featured projects will appear here once they’re published."
+    },
+    "properties": {
+      "intro": {
+        "_type": "sectionIntro",
+        "eyebrow": "Property listings",
+        "heading": "Available properties across the group",
+        "description": "Land and developments from every Hayvora company, in one place."
+      },
+      "cardLinkLabel": "View property",
+      "cta": {
+        "_type": "linkItem",
+        "label": "View all properties",
+        "href": "/properties"
+      },
+      "emptyText": "New listings will appear here soon."
+    }
+  },
+  "divisionPage": {
+    "overviewCta": {
+      "_type": "linkItem",
+      "label": "Talk to us",
+      "href": "/contact"
+    },
+    "visionLabel": "Vision",
+    "missionLabel": "Mission",
+    "servicesEyebrow": "Our services",
+    "valuesIntro": {
+      "_type": "sectionIntro",
+      "eyebrow": "Our core values",
+      "heading": "What we hold ourselves to"
+    },
+    "clientsIntro": {
+      "_type": "sectionIntro",
+      "eyebrow": "Who we work with",
+      "heading": "Target",
+      "headingEmphasis": "clients"
+    },
+    "zoneEyebrow": "Operational zone",
+    "projects": {
+      "heading": "Selected projects",
+      "cta": {
+        "_type": "linkItem",
+        "label": "View all projects",
+        "href": "/projects"
+      },
+      "emptyText": "Projects will appear here once they’re published."
+    },
+    "closing": {
+      "eyebrow": "Start a project",
+      "heading": "Need this on a project?",
+      "body": "Tell us the scope and we’ll come back with an approach and a timeline.",
+      "primaryCta": {
+        "_type": "linkItem",
+        "label": "Talk to us",
+        "href": "/contact"
+      },
+      "secondaryCta": {
+        "_type": "linkItem",
+        "label": "All services",
+        "href": "/services"
+      },
+      "image": {
+        "_type": "image",
+        "asset": {
+          "_type": "reference",
+          "_ref": "image-580362c9b49bf419702ba21af623b262569eff6b-1080x810-jpg"
+        }
+      }
+    }
+  },
+  "pageText": {
+    "about": {
+      "eyebrow": "About us",
+      "divisionEyebrow": "About",
+      "seo": {
+        "metaTitle": "About Hayvora Limited",
+        "metaDescription": "Hayvora Limited is a Ghanaian multidisciplinary group delivering civil and architectural construction, geospatial consulting, and agricultural systems across Ghana and West Africa."
+      }
+    },
+    "contact": {
+      "eyebrow": "Contact",
+      "title": "Get in touch",
+      "description": "Tell us what you're planning and we'll route you to the right division — usually within one working day.",
+      "divisionTitle": "Talk to {division}",
+      "directHeading": "Reach us directly",
+      "directBody": "Prefer to call or message? Any of these reaches the same team.",
+      "divisionDirectBody": "Every Hayvora division shares one front desk — mention {division} and we'll route you straight through.",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "whatsappLabel": "WhatsApp",
+      "officeLabel": "Office",
+      "seo": {
+        "metaTitle": "Contact Hayvora Limited",
+        "metaDescription": "Talk to Hayvora Limited about construction, land surveying, geotechnical investigation, or agricultural systems work in Ghana. Based at Adenta Shopping Mall, Accra."
+      }
+    },
+    "properties": {
+      "eyebrow": "Property listings",
+      "availableTitle": "Available properties",
+      "soldTitle": "Sold properties",
+      "description": "Land and developments from every Hayvora company. Submit a request and our team will arrange a viewing.",
+      "allLabel": "All",
+      "viewAvailableLabel": "View available",
+      "viewSoldLabel": "View sold",
+      "emptyAvailable": "No properties available in this category right now — check back soon.",
+      "emptySold": "No properties sold yet in this category right now — check back soon.",
+      "statusAvailable": "Available",
+      "statusReserved": "Reserved",
+      "statusSold": "Sold",
+      "bedroomsLabel": "Bedrooms",
+      "bathroomsLabel": "Bathrooms",
+      "floorAreaLabel": "Floor area",
+      "landSizeLabel": "Land size",
+      "bedUnit": "bed",
+      "bathUnit": "bath",
+      "areaUnit": "sqm",
+      "landUnit": "acres",
+      "soldNoticeTitle": "This property has been sold.",
+      "soldNoticeBody": "Browse current listings, or tell us what you're looking for.",
+      "notFoundTitle": "Property not found",
+      "detailDescription": "{property} in {place}. {status} through Hayvora Limited.",
+      "seo": {
+        "metaTitle": "Properties for Sale in Ghana",
+        "metaDescription": "Browse available land and property listings across Hayvora Limited and its divisions, with locations, specifications, and current availability."
+      }
+    },
+    "projects": {
+      "eyebrow": "Portfolio",
+      "title": "Projects",
+      "description": "Selected work delivered by {division}.",
+      "emptyText": "Projects will appear here once they’re published.",
+      "clientLabel": "Client",
+      "locationLabel": "Location",
+      "durationLabel": "Duration",
+      "yearLabel": "Year",
+      "viewLabel": "View project",
+      "viewFullLabel": "View full project page",
+      "ctaHeading": "Planning something similar?",
+      "ctaBody": "{division} can walk you through how this one was delivered.",
+      "ctaLabel": "Start a conversation",
+      "notFoundTitle": "Project not found"
+    },
+    "services": {
+      "eyebrow": "What we do",
+      "title": "Services",
+      "description": "The work {division} takes on, and what each engagement covers.",
+      "emptyText": "Services will appear here once they’re published.",
+      "learnMoreLabel": "Learn more",
+      "fullListLabel": "Full service list",
+      "detailEyebrow": "Service",
+      "ctaHeading": "Need this on a project?",
+      "ctaBody": "Tell us the scope and we'll come back with an approach and a timeline.",
+      "ctaLabel": "Talk to {division}",
+      "notFoundTitle": "Service not found"
+    },
+    "gallery": {
+      "eyebrow": "Gallery",
+      "title": "Project gallery",
+      "description": "Photography from {division} sites and completed work.",
+      "emptyText": "Gallery images will appear here once projects are published.",
+      "imageAlt": "Hayvora project"
+    },
+    "form": {
+      "regardingLabel": "Regarding:",
+      "nameLabel": "Name",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone",
+      "messageLabel": "Message",
+      "optionalHint": "Optional",
+      "submitViewing": "Request a viewing",
+      "submitService": "Send enquiry",
+      "submitContact": "Send message",
+      "sendingLabel": "Sending…",
+      "successTitle": "Thank you — we've received your request.",
+      "successBody": "A member of our team will contact you shortly to arrange next steps.",
+      "nameRequired": "Please enter your name",
+      "emailInvalid": "Enter a valid email address",
+      "phoneRequired": "Please enter a phone number",
+      "sendError": "We couldn't send that just now. Please try again, or email us directly.",
+      "networkError": "Network error — please check your connection and try again."
+    },
+    "email": {
+      "viewingSubject": "Viewing request: {property}",
+      "generalSubject": "New website inquiry",
+      "typeLabel": "Type:",
+      "propertyLabel": "Property:",
+      "nameLabel": "Name:",
+      "emailLabel": "Email:",
+      "phoneLabel": "Phone:",
+      "messageLabel": "Message:"
+    }
+  },
+  "brandHoldings": {
+    "stats": [
+      {
+        "_key": "divisions",
+        "_type": "stat",
+        "value": "3",
+        "label": "Specialist divisions"
+      }
+    ],
+    "processImages": [
+      "image-6a9e31b8403f78b5bc6942be0966c0fe03290ee4-1080x607-jpg",
+      "image-580362c9b49bf419702ba21af623b262569eff6b-1080x810-jpg",
+      "image-657cca9291a36abd62186549a7f2246a3a0acdcd-1080x607-jpg"
+    ]
+  },
+  "renames": [
+    [
+      "Hayvora Holdings Limited",
+      "Hayvora Limited"
+    ],
+    [
+      "Hayvora Holdings Ltd",
+      "Hayvora Limited"
+    ],
+    [
+      "the Hayvora Holdings division",
+      "the Hayvora Limited division"
+    ],
+    [
+      "At Hayvora Holdings,",
+      "At Hayvora Limited,"
+    ]
+  ],
+  "headingSplits": [
+    {
+      "id": "divisionProfile-infrastructure",
+      "from": "Tailored infrastructure solutions",
+      "heading": "Tailored",
+      "emphasis": "infrastructure solutions"
+    }
+  ]
+}

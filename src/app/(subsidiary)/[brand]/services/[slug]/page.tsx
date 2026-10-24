@@ -1,24 +1,25 @@
 import { notFound } from "next/navigation";
 
 import { safeFetch } from "../../../../../../sanity/lib/client";
-import { SERVICE_BY_SLUG_QUERY } from "../../../../../../sanity/lib/queries";
-import { Button } from "@/components/ui/Button";
-import { Container } from "@/components/ui/Container";
+import { BRAND_BY_SLUG_QUERY, SERVICE_BY_SLUG_QUERY } from "../../../../../../sanity/lib/queries";
+import { PillLink } from "@/components/site/Actions";
+import { PageBanner } from "@/components/site/division/DivisionSections";
 import { Reveal } from "@/components/ui/Motion";
-import { DIVISION_ART } from "@/components/ui/BlueprintArt";
-import { PageHero } from "@/components/layout/PageHero";
 import { PortableText } from "@/components/portable-text/PortableText";
 import { isSubsidiarySlug } from "@/lib/brands";
-import { FALLBACK_BRANDS } from "@/lib/fallbackContent";
-import type { ServiceDoc } from "@/types/sanity";
+import { divisionHref, fill, getPageText, getSiteSettings } from "@/lib/content";
+import { bannerImage, crumbsFor } from "@/lib/pageContext";
 import { buildMetadata } from "@/lib/seo";
+import type { BrandDoc, ServiceDoc } from "@/types/sanity";
+
+const fetchService = (slug: string) =>
+  safeFetch<ServiceDoc & { description?: unknown }>(SERVICE_BY_SLUG_QUERY, { slug }, ["service", `service:${slug}`]);
 
 export async function generateMetadata({ params }: { params: Promise<{ brand: string; slug: string }> }) {
   const { brand: brandSlug, slug } = await params;
   if (!isSubsidiarySlug(brandSlug)) return {};
-
-  const service = await safeFetch<ServiceDoc>(SERVICE_BY_SLUG_QUERY, { slug }, ["service", `service:${slug}`]);
-  if (!service) return { title: "Service not found" };
+  const [service, text] = await Promise.all([fetchService(slug), getPageText()]);
+  if (!service) return { title: text?.services?.notFoundTitle };
 
   return buildMetadata({
     title: service.title,
@@ -27,61 +28,57 @@ export async function generateMetadata({ params }: { params: Promise<{ brand: st
   });
 }
 
-export default async function ServiceDetailPage({
-  params,
-}: {
-  params: Promise<{ brand: string; slug: string }>;
-}) {
+export default async function ServiceDetailPage({ params }: { params: Promise<{ brand: string; slug: string }> }) {
   const { brand: brandSlug, slug } = await params;
   if (!isSubsidiarySlug(brandSlug)) notFound();
 
-  const service = await safeFetch<ServiceDoc & { description?: unknown }>(
-    SERVICE_BY_SLUG_QUERY,
-    { slug },
-    ["service", `service:${slug}`],
-  );
-
-  if (!service) notFound();
-
-  const brandName = FALLBACK_BRANDS[brandSlug]?.name ?? brandSlug;
+  const [service, brand, text, settings] = await Promise.all([
+    fetchService(slug),
+    safeFetch<BrandDoc>(BRAND_BY_SLUG_QUERY, { slug: brandSlug }, ["brand", `brand:${brandSlug}`]),
+    getPageText(),
+    getSiteSettings(),
+  ]);
+  if (!service || !brand) notFound();
+  const t = text?.services;
+  const { crumbs, crumbLabel } = await crumbsFor([
+    { label: brand.name, href: `/${brandSlug}` },
+    { label: t?.title ?? "", href: `/${brandSlug}/services` },
+    { label: service.title },
+  ]);
 
   return (
     <>
-      <PageHero
-        art={DIVISION_ART[brandSlug]?.primary}
-        secondaryArt={DIVISION_ART[brandSlug]?.secondary}
-        eyebrow="Service"
-        title={service.title}
+      <PageBanner
+        short
+        crumbs={crumbs}
+        crumbLabel={crumbLabel}
+        eyebrow={t?.detailEyebrow}
+        heading={service.title}
         description={service.shortDescription}
-        breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: brandName, href: `/${brandSlug}` },
-          { label: "Services", href: `/${brandSlug}/services` },
-        ]}
+        imageUrl={bannerImage(brand)}
       />
 
-      <section className="hv-aura-bg section relative">
-        <Container className="max-w-3xl">
+      <section className="py-24">
+        <div className="mx-auto max-w-[810px] px-5 sm:px-10">
           <Reveal>
             <PortableText value={service.description} />
           </Reveal>
 
-          <Reveal delay={0.15}>
-            <div className="mt-14 flex flex-wrap items-center gap-4 rounded-card border border-brand-line-soft bg-white p-8 shadow-soft">
+          {t?.ctaHeading && (
+            <div className="mt-14 flex flex-wrap items-center gap-6 rounded-[20px] bg-[var(--hv-blue)] p-8 text-white sm:p-10">
               <div className="flex-1">
-                <p className="font-display text-lg font-semibold tracking-tight text-brand-ink">
-                  Need this on a project?
-                </p>
-                <p className="mt-1.5 text-sm text-brand-ink/65">
-                  Tell us the scope and we&apos;ll come back with an approach and a timeline.
-                </p>
+                <p className="text-2xl font-bold tracking-[-0.03em]">{t.ctaHeading}</p>
+                {t.ctaBody && <p className="mt-2 text-base text-white/85">{t.ctaBody}</p>}
               </div>
-              <Button href={`/${brandSlug}/contact`} variant="secondary" withArrow>
-                Talk to {brandName}
-              </Button>
+              <PillLink
+                link={{
+                  label: fill(t.ctaLabel, { division: brand.name }),
+                  href: divisionHref(settings?.header?.cta?.href, brandSlug),
+                }}
+              />
             </div>
-          </Reveal>
-        </Container>
+          )}
+        </div>
       </section>
     </>
   );

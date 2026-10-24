@@ -8,25 +8,29 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/Button";
 import { EASE_OUT } from "@/components/ui/Motion";
 import { inquirySchema, type InquiryInput } from "@/lib/validations/inquirySchema";
+import type { PageTextDoc } from "@/types/sanity";
 
-/** Submit label matches what the visitor is actually asking for. */
-const SUBMIT_LABEL: Record<InquiryInput["kind"], string> = {
-  property_viewing: "Request a viewing",
-  service_inquiry: "Send enquiry",
-  general_contact: "Send message",
-};
+type FormCopy = NonNullable<PageTextDoc["form"]>;
 
 export function InquiryForm({
   kind,
   propertyId,
   propertyTitle,
   brandId,
+  copy = {},
 }: {
   kind: InquiryInput["kind"];
   propertyId?: string;
   propertyTitle?: string;
   brandId?: string;
+  copy?: FormCopy;
 }) {
+  // The submit label matches what the visitor is actually asking for.
+  const submitLabel = {
+    property_viewing: copy.submitViewing,
+    service_inquiry: copy.submitService,
+    general_contact: copy.submitContact,
+  }[kind];
   // Network/server failures are tracked separately from field validation — previously
   // a failed POST reset nothing and showed nothing, so the form just looked inert.
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -51,13 +55,13 @@ export function InquiryForm({
       });
 
       if (!res.ok) {
-        setSubmitError("We couldn't send that just now. Please try again, or email us directly.");
+        setSubmitError(copy.sendError ?? "");
         return;
       }
 
       reset({ kind, propertyId, propertyTitle, brandId });
     } catch {
-      setSubmitError("Network error — please check your connection and try again.");
+      setSubmitError(copy.networkError ?? "");
     }
   };
 
@@ -75,12 +79,8 @@ export function InquiryForm({
             <path d="M3 8.5l3.5 3.5L13 5" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </span>
-        <p className="font-display mt-5 text-lg font-semibold text-brand-ink">
-          Thank you — we&apos;ve received your request.
-        </p>
-        <p className="mt-2 text-sm leading-relaxed text-brand-ink/65">
-          A member of our team will contact you shortly to arrange next steps.
-        </p>
+        <p className="font-display mt-5 text-lg font-semibold text-brand-ink">{copy.successTitle}</p>
+        <p className="mt-2 text-sm leading-relaxed text-brand-ink/65">{copy.successBody}</p>
       </motion.div>
     );
   }
@@ -93,12 +93,12 @@ export function InquiryForm({
     >
       {propertyTitle && (
         <p className="mb-6 rounded-control bg-brand-tint px-4 py-3 text-sm text-brand-ink/70">
-          Regarding: <span className="font-semibold text-brand-ink">{propertyTitle}</span>
+          {copy.regardingLabel} <span className="font-semibold text-brand-ink">{propertyTitle}</span>
         </p>
       )}
 
       <div className="space-y-5">
-        <Field label="Name" error={errors.name?.message}>
+        <Field label={copy.nameLabel} error={errors.name && copy.nameRequired}>
           <input
             {...register("name")}
             autoComplete="name"
@@ -107,7 +107,7 @@ export function InquiryForm({
           />
         </Field>
 
-        <Field label="Email" error={errors.email?.message}>
+        <Field label={copy.emailLabel} error={errors.email && copy.emailInvalid}>
           <input
             type="email"
             {...register("email")}
@@ -117,7 +117,7 @@ export function InquiryForm({
           />
         </Field>
 
-        <Field label="Phone" error={errors.phone?.message}>
+        <Field label={copy.phoneLabel} error={errors.phone && copy.phoneRequired}>
           <input
             type="tel"
             {...register("phone")}
@@ -127,7 +127,7 @@ export function InquiryForm({
           />
         </Field>
 
-        <Field label="Message" hint="Optional" error={errors.message?.message}>
+        <Field label={copy.messageLabel} hint={copy.optionalHint}>
           <textarea {...register("message")} rows={4} className={`${inputClass(!!errors.message)} resize-y`} />
         </Field>
       </div>
@@ -139,7 +139,7 @@ export function InquiryForm({
       )}
 
       <Button type="submit" variant="secondary" size="md" disabled={isSubmitting} className="mt-7 w-full">
-        {isSubmitting ? "Sending…" : SUBMIT_LABEL[kind]}
+        {isSubmitting ? copy.sendingLabel : submitLabel}
       </Button>
     </form>
   );
@@ -164,7 +164,7 @@ function Field({
   error,
   children,
 }: {
-  label: string;
+  label?: string;
   hint?: string;
   error?: string;
   children: React.ReactNode;

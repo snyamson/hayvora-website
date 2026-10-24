@@ -1,3 +1,4 @@
+import type { PageTextDoc } from "@/types/sanity";
 import { Body, Container, Head, Heading, Html, Preview, Section, Text } from "@react-email/components";
 
 export function NewInquiryEmail({
@@ -7,6 +8,8 @@ export function NewInquiryEmail({
   message,
   propertyTitle,
   kind,
+  subject,
+  labels = {},
 }: {
   name: string;
   email: string;
@@ -14,8 +17,9 @@ export function NewInquiryEmail({
   message?: string;
   propertyTitle?: string;
   kind: string;
+  subject: string;
+  labels?: NonNullable<PageTextDoc["email"]>;
 }) {
-  const subject = propertyTitle ? `Viewing request: ${propertyTitle}` : "New website inquiry";
 
   return (
     <Html>
@@ -26,25 +30,25 @@ export function NewInquiryEmail({
           <Heading style={{ fontSize: "18px" }}>{subject}</Heading>
           <Section>
             <Text>
-              <strong>Type:</strong> {kind}
+              <strong>{labels.typeLabel}</strong> {kind}
             </Text>
             {propertyTitle && (
               <Text>
-                <strong>Property:</strong> {propertyTitle}
+                <strong>{labels.propertyLabel}</strong> {propertyTitle}
               </Text>
             )}
             <Text>
-              <strong>Name:</strong> {name}
+              <strong>{labels.nameLabel}</strong> {name}
             </Text>
             <Text>
-              <strong>Email:</strong> {email}
+              <strong>{labels.emailLabel}</strong> {email}
             </Text>
             <Text>
-              <strong>Phone:</strong> {phone}
+              <strong>{labels.phoneLabel}</strong> {phone}
             </Text>
             {message && (
               <Text>
-                <strong>Message:</strong> {message}
+                <strong>{labels.messageLabel}</strong> {message}
               </Text>
             )}
           </Section>

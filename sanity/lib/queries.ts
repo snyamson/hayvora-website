@@ -4,6 +4,18 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
   *[_type == "siteSettings"][0]
 `);
 
+export const HOME_PAGE_QUERY = defineQuery(`
+  *[_type == "homePage"][0]
+`);
+
+export const DIVISION_PAGE_QUERY = defineQuery(`
+  *[_type == "divisionPage"][0]
+`);
+
+export const PAGE_TEXT_QUERY = defineQuery(`
+  *[_type == "pageText"][0]
+`);
+
 export const BRAND_BY_SLUG_QUERY = defineQuery(`
   *[_type == "brand" && slug.current == $slug][0]
 `);
@@ -73,8 +85,9 @@ export const SOLD_PROPERTIES_QUERY = defineQuery(`
 `);
 
 export const GALLERY_IMAGES_BY_BRAND_QUERY = defineQuery(`
-  *[_type == "project" && brand->slug.current == $slug]{
+  *[_type == "project" && brand->slug.current == $slug] | order(orderRank asc){
     title,
+    coverImage,
     "images": gallery[]
   }
 `);
@@ -88,6 +101,7 @@ export const DIVISION_PROFILE_BY_BRAND_QUERY = defineQuery(`
     mission,
     values[]{title, description},
     servicesHeading,
+    servicesHeadingEmphasis,
     servicesIntro,
     services[]{title, description, items, image},
     clients,

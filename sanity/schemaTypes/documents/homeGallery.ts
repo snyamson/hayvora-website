@@ -24,6 +24,7 @@ export const homeGallery = defineType({
       type: "string",
       initialValue: "Project Gallery",
     }),
+    defineField({ name: "link", title: "Gallery link", type: "linkItem" }),
     defineField({
       name: "images",
       title: "Images",

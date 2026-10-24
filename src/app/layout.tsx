@@ -1,78 +1,80 @@
 import type { Metadata } from "next";
-import { Montserrat, Roboto } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
-import { DEFAULT_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/seo";
+import { getSiteSettings } from "@/lib/content";
+import { SITE_URL, ogImageUrl } from "@/lib/seo";
 
-// Both are variable fonts, so no `weight` is declared — the full 100–900 axis is
-// available and Tailwind's font-medium/semibold/bold all resolve to real weights.
-// Fallbacks are metrically close so the swap-in doesn't shift layout.
-const montserrat = Montserrat({
-  variable: "--font-display",
-  subsets: ["latin"],
-  display: "swap",
-  fallback: ["Helvetica Neue", "Arial", "sans-serif"],
-});
-
-const roboto = Roboto({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  display: "swap",
-  fallback: ["Helvetica Neue", "Arial", "sans-serif"],
-});
-
-export const metadata: Metadata = {
-  // metadataBase makes every relative OG/canonical URL below resolve to an absolute one.
-  metadataBase: new URL(SITE_URL),
-  title: {
-    default: `${SITE_NAME} — Construction, Surveying & Agricultural Systems in Ghana`,
-    // Child pages set only their own title; this appends the brand automatically.
-    template: `%s | ${SITE_NAME}`,
-  },
-  description: DEFAULT_DESCRIPTION,
-  applicationName: SITE_NAME,
-  authors: [{ name: SITE_NAME, url: SITE_URL }],
-  creator: SITE_NAME,
-  publisher: SITE_NAME,
-  keywords: [
-    "construction company Ghana",
-    "civil engineering Ghana",
-    "architectural construction Accra",
-    "land surveying Ghana",
-    "drone mapping Ghana",
-    "geotechnical investigation",
-    "GIS consulting West Africa",
-    "greenhouse construction Ghana",
-    "smart irrigation",
-    "property listings Ghana",
-    "Hayvora Holdings",
+// Apfel Grotezk and Necto Mono, both SIL Open Font License from Collletttivo; the
+// licence files sit next to the fonts. Apfel covers headings and body alike;
+// globals.css points --font-display at it.
+const apfel = localFont({
+  src: [
+    { path: "./fonts/ApfelGrotezk-Regular.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/ApfelGrotezk-Mittel.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/ApfelGrotezk-Fett.woff2", weight: "700", style: "normal" },
   ],
-  alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    siteName: SITE_NAME,
-    locale: "en_GH",
-    url: SITE_URL,
-    title: `${SITE_NAME} — Construction, Surveying & Agricultural Systems in Ghana`,
-    description: DEFAULT_DESCRIPTION,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: SITE_NAME,
-    description: DEFAULT_DESCRIPTION,
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+  variable: "--font-sans",
+  display: "swap",
+  fallback: ["ui-sans-serif", "system-ui", "sans-serif"],
+});
+
+const necto = localFont({
+  src: "./fonts/NectoMono-Regular.woff2",
+  weight: "400",
+  variable: "--font-mono",
+  display: "swap",
+  fallback: ["ui-monospace", "monospace"],
+});
+
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings();
+  const siteName = settings?.companyName ?? settings?.title;
+  const description = settings?.defaultSeo?.metaDescription;
+  const homeTitle = [settings?.defaultSeo?.metaTitle ?? siteName, settings?.titleSuffix].filter(Boolean).join(" — ");
+  const image = ogImageUrl(settings?.defaultSeo?.ogImage);
+
+  return {
+    // metadataBase makes every relative OG/canonical URL below resolve to an absolute one.
+    metadataBase: new URL(SITE_URL),
+    title: {
+      default: homeTitle,
+      // Child pages set only their own title; this appends the site name automatically.
+      template: siteName ? `%s | ${siteName}` : "%s",
+    },
+    description,
+    applicationName: siteName,
+    authors: siteName ? [{ name: siteName, url: SITE_URL }] : undefined,
+    creator: siteName,
+    publisher: siteName,
+    keywords: settings?.keywords,
+    alternates: { canonical: "/" },
+    openGraph: {
+      type: "website",
+      siteName,
+      locale: "en_GH",
+      url: SITE_URL,
+      title: homeTitle,
+      description,
+      ...(image ? { images: [{ url: image, width: 1200, height: 630 }] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: siteName,
+      description,
+    },
+    robots: {
       index: true,
       follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
     },
-  },
-  category: "Construction",
-};
+  };
+}
 
 export default function RootLayout({
   children,
@@ -80,7 +82,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${montserrat.variable} ${roboto.variable} h-full antialiased`}>
+    <html lang="en" className={`${apfel.variable} ${necto.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

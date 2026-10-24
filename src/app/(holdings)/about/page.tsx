@@ -1,45 +1,48 @@
 import { safeFetch } from "../../../../sanity/lib/client";
+import { urlFor } from "../../../../sanity/lib/image";
 import { BRAND_BY_SLUG_QUERY } from "../../../../sanity/lib/queries";
-import { Container } from "@/components/ui/Container";
+import { PageBanner } from "@/components/site/division/DivisionSections";
 import { Reveal } from "@/components/ui/Motion";
-import { PageHero } from "@/components/layout/PageHero";
 import { PortableText } from "@/components/portable-text/PortableText";
-import { FALLBACK_BRANDS } from "@/lib/fallbackContent";
-import type { BrandDoc } from "@/types/sanity";
+import { getPageText } from "@/lib/content";
+import { crumbsFor } from "@/lib/pageContext";
 import { buildMetadata } from "@/lib/seo";
+import type { BrandDoc } from "@/types/sanity";
 
-export const metadata = buildMetadata({
-  title: "About Hayvora Holdings",
-  description:
-    "Hayvora Holdings Limited is a Ghanaian multidisciplinary group delivering civil and architectural construction, geospatial consulting, and agricultural systems through three specialist divisions.",
-  path: "/about",
-});
+const fetchHoldings = () =>
+  safeFetch<BrandDoc>(BRAND_BY_SLUG_QUERY, { slug: "holdings" }, ["brand", "brand:holdings"]);
+
+export async function generateMetadata() {
+  const text = await getPageText();
+  return buildMetadata({ path: "/about", seo: text?.about?.seo });
+}
 
 export default async function HoldingsAboutPage() {
-  const brand = await safeFetch<BrandDoc>(BRAND_BY_SLUG_QUERY, { slug: "holdings" }, ["brand", "brand:holdings"]);
-  const resolvedBrand = brand ?? FALLBACK_BRANDS.holdings;
+  const [brand, text] = await Promise.all([fetchHoldings(), getPageText()]);
+  const { crumbs, crumbLabel } = await crumbsFor([{ label: text?.about?.eyebrow ?? "" }]);
 
   return (
     <>
-      <PageHero
-        art="crane"
-        secondaryArt="totalStation"
-        eyebrow="About Us"
-        title={resolvedBrand.name}
-        description={resolvedBrand.tagline}
-        breadcrumbs={[{ label: "Home", href: "/" }]}
+      <PageBanner
+        short
+        crumbs={crumbs}
+        crumbLabel={crumbLabel}
+        eyebrow={text?.about?.eyebrow}
+        heading={brand?.name}
+        description={brand?.tagline}
+        imageUrl={brand?.narrativeImage?.asset ? urlFor(brand.narrativeImage).width(1920).url() : undefined}
       />
 
-      <section className="hv-aura-bg section relative">
-        <Container className="max-w-3xl">
+      <section className="py-24">
+        <div className="mx-auto max-w-[810px] px-5 sm:px-10">
           <Reveal>
-            {resolvedBrand.about ? (
-              <PortableText value={resolvedBrand.about} />
+            {brand?.about ? (
+              <PortableText value={brand.about} />
             ) : (
-              <p className="text-lg leading-relaxed text-brand-ink/75">{resolvedBrand.shortDescription}</p>
+              brand?.shortDescription && <p className="hv-lead">{brand.shortDescription}</p>
             )}
           </Reveal>
-        </Container>
+        </div>
       </section>
     </>
   );

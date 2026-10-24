@@ -8,17 +8,19 @@ export type GalleryItem = {
   alt: string;
 };
 
+type Size = { width: number; height: number };
+
 function toItem(
   image: (SanityImage & { alt?: string; caption?: string }) | undefined,
   fallbackAlt: string,
+  size: Size,
 ): GalleryItem[] {
   if (!image?.asset?._ref) return [];
   try {
     return [
       {
         id: image.asset._ref,
-        // Cropped to the marquee tile's 4:3-ish box, so no need for the full-size file.
-        url: urlFor(image).width(640).height(480).quality(80).url(),
+        url: urlFor(image).width(size.width).height(size.height).quality(80).url(),
         alt: image.alt ?? fallbackAlt,
       },
     ];
@@ -35,12 +37,13 @@ function toItem(
 export function getGalleryItems(
   homeGallery: HomeGalleryDoc | null | undefined,
   projects: ProjectGallerySource[] | null | undefined,
+  { fallbackAlt = "", size = { width: 640, height: 480 } }: { fallbackAlt?: string; size?: Size } = {},
 ): GalleryItem[] {
-  const loose = (homeGallery?.images ?? []).flatMap((img) => toItem(img, homeGallery?.heading ?? "Hayvora project"));
+  const loose = (homeGallery?.images ?? []).flatMap((img) => toItem(img, homeGallery?.heading ?? fallbackAlt, size));
 
   const fromProjects = (projects ?? []).flatMap((project) => {
-    const gallery = (project.gallery ?? []).flatMap((img) => toItem(img, project.title));
-    return gallery.length > 0 ? gallery : toItem(project.coverImage, project.title);
+    const gallery = (project.gallery ?? []).flatMap((img) => toItem(img, project.title, size));
+    return gallery.length > 0 ? gallery : toItem(project.coverImage, project.title, size);
   });
 
   // Dedupe by asset ref — a project's cover often also sits in its own gallery.

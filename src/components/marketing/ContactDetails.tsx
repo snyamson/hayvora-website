@@ -11,27 +11,37 @@ type ContactInfo = { email?: string; phone?: string; whatsapp?: string };
  * Every row is a real link — `mailto:`, `tel:` and a wa.me deep link — because on a
  * phone a plain text number is a number you have to copy by hand.
  */
-export function ContactDetails({ info, address }: { info?: ContactInfo; address?: string }) {
+type Labels = { email?: string; phone?: string; whatsapp?: string; office?: string };
+
+export function ContactDetails({
+  info,
+  address,
+  labels = {},
+}: {
+  info?: ContactInfo;
+  address?: string;
+  labels?: Labels;
+}) {
   const rows = [
     info?.email && {
-      label: "Email",
+      label: labels.email ?? "",
       value: info.email,
       href: `mailto:${info.email}`,
       icon: <MailIcon />,
     },
     info?.phone && {
-      label: "Phone",
+      label: labels.phone ?? "",
       value: info.phone,
       href: `tel:${info.phone.replace(/\s/g, "")}`,
       icon: <PhoneIcon />,
     },
     info?.whatsapp && {
-      label: "WhatsApp",
+      label: labels.whatsapp ?? "",
       value: info.whatsapp,
       href: `https://wa.me/${info.whatsapp.replace(/[^\d]/g, "")}`,
       icon: <ChatIcon />,
     },
-    address && { label: "Office", value: address, href: undefined, icon: <PinIcon /> },
+    address && { label: labels.office ?? "", value: address, href: undefined, icon: <PinIcon /> },
   ].filter(Boolean) as { label: string; value: string; href?: string; icon: ReactNode }[];
 
   if (rows.length === 0) return null;
@@ -57,7 +67,7 @@ export function ContactDetails({ info, address }: { info?: ContactInfo; address?
           "group flex items-center gap-4 rounded-card border border-brand-line-soft bg-white p-4 shadow-soft transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]";
 
         return (
-          <StaggerItem key={row.label} y={14}>
+          <StaggerItem key={row.value} y={14}>
             {row.href ? (
               <a
                 href={row.href}
