@@ -9,7 +9,7 @@ import type { LinkDoc } from "@/types/sanity";
 import { ArrowButton } from "../Actions";
 import { ArrowUpRight, Chevron } from "../Icons";
 
-export type HeroProject = { title: string; eyebrow?: string; imageUrl?: string; href: string };
+export type HeroProject = { title: string; eyebrow?: string; imageUrl?: string; imageAlt?: string; href: string };
 
 /**
  * Bechtel's homepage hero: full-bleed footage, a big plain headline bottom left, one
@@ -103,7 +103,7 @@ export function HomeHero({
           )}
           <Link href={current.href} className="hv-hcard relative block rounded-lg bg-white p-6 text-black">
             <div className="h-[140px] overflow-hidden rounded-lg bg-[var(--hv-tint)]">
-              {current.imageUrl && <img src={current.imageUrl} alt="" className="h-full w-full object-cover" />}
+              {current.imageUrl && <img src={current.imageUrl} alt={current.imageAlt ?? ""} className="h-full w-full object-cover" />}
             </div>
             {current.eyebrow && (
               <p className="hv-mono mt-6 text-[13px] leading-[18px] text-[var(--hv-muted)]">{current.eyebrow}</p>

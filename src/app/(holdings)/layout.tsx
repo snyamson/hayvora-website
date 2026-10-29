@@ -9,6 +9,7 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { getBrandThemeStyle } from "@/lib/brandHelpers";
 import { getChrome } from "@/lib/chrome";
 import { organizationSchema } from "@/lib/structuredData";
+import { describe } from "@/lib/imageAlt";
 
 export default async function HoldingsLayout({ children }: { children: ReactNode }) {
   const { settings, holdings, logo, divisions, projects } = await getChrome();
@@ -39,6 +40,7 @@ export default async function HoldingsLayout({ children }: { children: ReactNode
         primary={closing?.primaryCta}
         secondary={closing?.secondaryCta}
         imageUrl={closing?.image?.asset ? urlFor(closing.image).width(1800).url() : undefined}
+        imageAlt={describe(undefined, holdings?.name)}
       />
       <SiteFooter logo={logo} settings={settings} divisions={divisions} />
     </div>

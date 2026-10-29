@@ -101,7 +101,8 @@ export type ProjectDoc = {
   _id: string;
   title: string;
   slug: { current: string };
-  brand?: { name: string; slug: { current: string } };
+  // The division's full name, such as "Hayvora Infrastructure Ltd", where a query adds it.
+  brand?: { name: string; slug: { current: string }; legalName?: string };
   summary?: string;
   description?: unknown;
   /** Card/thumbnail image — grids, featured bento, social shares. */
@@ -122,7 +123,7 @@ export type PropertyDoc = {
   _id: string;
   title: string;
   slug: { current: string };
-  brand?: { _id: string; name: string; slug: { current: string } };
+  brand?: { _id: string; name: string; slug: { current: string }; legalName?: string };
   images?: SanityImage[];
   price?: number;
   priceOnRequest?: boolean;

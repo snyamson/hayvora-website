@@ -7,6 +7,7 @@ import { getPageText, getSiteSettings } from "@/lib/content";
 import { crumbsFor } from "@/lib/pageContext";
 import { buildMetadata } from "@/lib/seo";
 import type { BrandDoc } from "@/types/sanity";
+import { describe } from "@/lib/imageAlt";
 
 export async function generateMetadata() {
   const text = await getPageText();
@@ -32,6 +33,7 @@ export default async function HoldingsContactPage() {
         heading={c?.title}
         description={c?.description}
         imageUrl={brand?.narrativeImage?.asset ? urlFor(brand.narrativeImage).width(1920).url() : undefined}
+        imageAlt={describe(undefined, brand?.name)}
       />
       <ContactBlock
         heading={c?.directHeading}

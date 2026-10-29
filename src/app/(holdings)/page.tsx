@@ -22,10 +22,11 @@ import { ProjectsCarousel } from "@/components/site/ProjectsCarousel";
 import { getHeroSlides } from "@/lib/brandHelpers";
 import { getDivisions, getFeaturedProjects, getHomePage, getPageText, getSiteSettings } from "@/lib/content";
 import { getGalleryItems } from "@/lib/galleryHelpers";
-import { getProjectThumbnail } from "@/lib/projectHelpers";
+import { getProjectThumbnail, projectImageAlt } from "@/lib/projectHelpers";
 import { toPropertyCard } from "@/lib/propertyCards";
 import { buildMetadata } from "@/lib/seo";
 import type { BrandDoc, HomeGalleryDoc, ProjectDoc, ProjectGallerySource, PropertyDoc, SanityImage } from "@/types/sanity";
+import { describe } from "@/lib/imageAlt";
 
 const img = (image: SanityImage | undefined, width: number, height?: number) => {
   if (!image?.asset) return undefined;
@@ -66,6 +67,7 @@ export default async function HoldingsHomePage() {
   const projects = featured ?? [];
   const galleryImages = getGalleryItems(gallery, pool, {
     fallbackAlt: text?.gallery?.imageAlt,
+    owner: brand?.name,
     size: { width: 1200, height: 800 },
   });
   const wc = brand?.whyChoose;
@@ -82,6 +84,7 @@ export default async function HoldingsHomePage() {
           title: p.title,
           eyebrow: projectEyebrow(p),
           imageUrl: getProjectThumbnail(p, 600, 340),
+          imageAlt: projectImageAlt(p, p.coverImage?.alt),
           href: projectHref(p),
         }))}
         labels={{ previous: labels?.previous, next: labels?.next }}
@@ -95,6 +98,7 @@ export default async function HoldingsHomePage() {
         body={wc?.statDescription}
         cta={{ label: wc?.ctaLabel, href: wc?.ctaHref }}
         imageUrl={img(wc?.statImage, 1200)}
+        imageAlt={describe(undefined, brand?.name)}
       />
 
       <Metrics intro={home?.metrics} stats={brand?.stats ?? []} />
@@ -110,6 +114,7 @@ export default async function HoldingsHomePage() {
             tagline: d.tagline,
             description: d.shortDescription,
             imageUrl: still?.type === "image" ? still.imageUrl : undefined,
+            imageAlt: describe(still?.type === "image" ? still.alt : undefined, d.name),
           };
         })}
       />
@@ -119,6 +124,7 @@ export default async function HoldingsHomePage() {
         body={home?.narrative?.body}
         cta={home?.narrative?.cta}
         imageUrl={img(brand?.narrativeImage, 1920)}
+        imageAlt={describe(undefined, brand?.name)}
       />
 
       {(brand?.process?.length ?? 0) > 0 && (
@@ -135,6 +141,7 @@ export default async function HoldingsHomePage() {
                   key: `${i}-${step.title}`,
                   title: step.title,
                   imageUrl: img(step.image, 1000, 700),
+                  imageAlt: describe(undefined, step.title, brand?.name),
                   body: (
                     <>
                       {step.description && (
@@ -165,6 +172,7 @@ export default async function HoldingsHomePage() {
           eyebrow: projectEyebrow(p),
           meta: projectMeta(p),
           imageUrl: getProjectThumbnail(p, 1000, 1334),
+          imageAlt: projectImageAlt(p, p.coverImage?.alt),
         }))}
       />
 

@@ -30,12 +30,15 @@ export function WhyChooseBlock({
   body,
   cta,
   imageUrl,
+  imageAlt = "",
 }: {
   eyebrow?: string;
   heading?: string;
   body?: string;
   cta?: LinkDoc;
   imageUrl?: string;
+  /** What the photo shows; empty only for decoration. */
+  imageAlt?: string;
 }) {
   if (!heading) return null;
   return (
@@ -54,7 +57,7 @@ export function WhyChooseBlock({
         </div>
         {imageUrl && (
           <div className="h-[clamp(360px,47vw,672px)] overflow-hidden rounded-lg">
-            <img src={imageUrl} alt="" className="h-full w-full object-cover" />
+            <img src={imageUrl} alt={imageAlt} className="h-full w-full object-cover" />
           </div>
         )}
       </div>
@@ -87,7 +90,7 @@ export function Metrics({ intro, stats }: { intro?: SectionIntroDoc; stats: { va
   );
 }
 
-export type DivisionCard = { slug: string; name: string; tagline?: string; description?: string; imageUrl?: string };
+export type DivisionCard = { slug: string; name: string; tagline?: string; description?: string; imageUrl?: string; imageAlt?: string };
 
 /** EllisDon's tall division cards with the plus icon; Bechtel's reveal on hover. */
 export function DivisionCards({
@@ -119,7 +122,7 @@ export function DivisionCards({
               href={`/${d.slug}`}
               className="hv-photo-card is-zoom h-[clamp(440px,40vw,577px)] rounded-[20px] bg-[var(--hv-tint)] [--hv-rise:64px]"
             >
-              {d.imageUrl && <img src={d.imageUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />}
+              {d.imageUrl && <img src={d.imageUrl} alt={d.imageAlt ?? ""} className="absolute inset-0 h-full w-full object-cover" />}
               <span className="hv-card-icon is-plus absolute top-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-white text-[var(--hv-blue)]">
                 <Plus />
               </span>
@@ -145,16 +148,19 @@ export function NarrativeBand({
   body,
   cta,
   imageUrl,
+  imageAlt = "",
 }: {
   heading?: string;
   body?: string;
   cta?: LinkDoc;
   imageUrl?: string;
+  /** What the photo shows; empty only for decoration. */
+  imageAlt?: string;
 }) {
   if (!heading) return null;
   return (
     <section className="relative h-[clamp(640px,62vw,900px)] overflow-hidden bg-[#0e1b14] text-white">
-      {imageUrl && <img src={imageUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />}
+      {imageUrl && <img src={imageUrl} alt={imageAlt} className="absolute inset-0 h-full w-full object-cover" />}
       <div className="absolute inset-0 bg-[rgb(8_16_12/0.6)]" />
       <div className="hv-wrap relative grid h-full items-end gap-14 pb-[90px] lg:grid-cols-2">
         <div>
@@ -227,6 +233,8 @@ export type PropertyCard = {
   title: string;
   location?: string;
   imageUrl?: string;
+  /** What the photo shows; empty only for decoration. */
+  imageAlt?: string;
   status: "available" | "reserved" | "sold";
   statusLabel?: string;
   eyebrow?: string;
@@ -296,7 +304,7 @@ export function PropertyTile({ property: p, linkLabel }: { property: PropertyCar
     <Link href={p.href} className="group block">
       <div className="hv-zoom h-[230px] bg-[var(--hv-tint)]">
         {p.imageUrl && (
-          <img src={p.imageUrl} alt="" className={`h-full w-full object-cover ${p.status === "sold" ? "grayscale" : ""}`} />
+          <img src={p.imageUrl} alt={p.imageAlt ?? ""} className={`h-full w-full object-cover ${p.status === "sold" ? "grayscale" : ""}`} />
         )}
       </div>
       <div className="mt-5 flex flex-wrap items-center gap-3">

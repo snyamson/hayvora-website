@@ -5,9 +5,10 @@ import { BRAND_BY_SLUG_QUERY } from "../../../../../sanity/lib/queries";
 import { ContactBlock } from "@/components/site/ContactBlock";
 import { PageBanner } from "@/components/site/division/DivisionSections";
 import { isSubsidiarySlug } from "@/lib/brands";
-import { fill, getPageText, getSiteSettings } from "@/lib/content";
+import { divisionOwner, fill, getPageText, getSiteSettings } from "@/lib/content";
 import { bannerImage, crumbsFor, divisionPageMetadata } from "@/lib/pageContext";
 import type { BrandDoc } from "@/types/sanity";
+import { describe } from "@/lib/imageAlt";
 
 export async function generateMetadata({ params }: { params: Promise<{ brand: string }> }) {
   const { brand } = await params;
@@ -40,6 +41,7 @@ export default async function SubsidiaryContactPage({ params }: { params: Promis
         heading={fill(c?.divisionTitle, { division: brand.name })}
         description={brand.shortDescription}
         imageUrl={bannerImage(brand)}
+        imageAlt={describe(undefined, await divisionOwner(brandSlug, brand.name))}
       />
       <ContactBlock
         heading={c?.directHeading}

@@ -19,9 +19,10 @@ import {
 import { getHeroSlides } from "@/lib/brandHelpers";
 import { isSubsidiarySlug } from "@/lib/brands";
 import { divisionHref, getDivisionPage, getSiteSettings } from "@/lib/content";
-import { getProjectThumbnail } from "@/lib/projectHelpers";
+import { getProjectThumbnail, projectImageAlt } from "@/lib/projectHelpers";
 import { buildMetadata } from "@/lib/seo";
 import type { BrandDoc, DivisionProfileDoc, LinkDoc, ProjectDoc } from "@/types/sanity";
+import { describe } from "@/lib/imageAlt";
 
 const fetchBrand = (slug: string) =>
   safeFetch<BrandDoc>(BRAND_BY_SLUG_QUERY, { slug }, ["brand", `brand:${slug}`]);
@@ -70,6 +71,7 @@ export default async function DivisionHomePage({ params }: { params: Promise<{ b
         eyebrow={profile?.legalName}
         heading={profile?.tagline ?? brand.hero?.headline}
         imageUrl={still?.type === "image" ? still.imageUrl : undefined}
+        imageAlt={describe(still?.type === "image" ? still.alt : undefined, profile?.legalName ?? brand.name)}
       />
 
       <CentredOverview
@@ -143,6 +145,7 @@ export default async function DivisionHomePage({ params }: { params: Promise<{ b
           eyebrow: [p.category?.[0], p.location].filter(Boolean).join(" · "),
           meta: [p.client, p.duration].filter(Boolean).join(" · "),
           imageUrl: getProjectThumbnail(p, 800, 1100),
+          imageAlt: projectImageAlt(p, p.coverImage?.alt, profile?.legalName ?? brand.name),
         }))}
       />
     </>

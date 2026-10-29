@@ -6,9 +6,10 @@ import { PageBanner } from "@/components/site/division/DivisionSections";
 import { Reveal } from "@/components/ui/Motion";
 import { PortableText } from "@/components/portable-text/PortableText";
 import { isSubsidiarySlug } from "@/lib/brands";
-import { getPageText } from "@/lib/content";
+import { divisionOwner, getPageText } from "@/lib/content";
 import { bannerImage, crumbsFor, divisionPageMetadata } from "@/lib/pageContext";
 import type { BrandDoc } from "@/types/sanity";
+import { describe } from "@/lib/imageAlt";
 
 export async function generateMetadata({ params }: { params: Promise<{ brand: string }> }) {
   const { brand } = await params;
@@ -39,6 +40,7 @@ export default async function SubsidiaryAboutPage({ params }: { params: Promise<
         heading={brand.name}
         description={brand.tagline}
         imageUrl={bannerImage(brand)}
+        imageAlt={describe(undefined, await divisionOwner(brandSlug, brand.name))}
       />
 
       <section className="py-24">

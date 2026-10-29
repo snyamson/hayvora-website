@@ -11,6 +11,7 @@ export type AccordionItem = {
   /** Everything shown under the title when the item is open. */
   body: ReactNode;
   imageUrl?: string;
+  imageAlt?: string;
 };
 
 /**
@@ -61,7 +62,7 @@ export function NumberedAccordion({
               </div>
               {item.imageUrl && (
                 <div className="relative min-h-[345px] overflow-hidden rounded-2xl">
-                  <img src={item.imageUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
+                  <img src={item.imageUrl} alt={item.imageAlt ?? ""} className="absolute inset-0 h-full w-full object-cover" />
                   <button
                     type="button"
                     className="hv-round absolute top-3 right-3"

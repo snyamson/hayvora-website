@@ -5,10 +5,11 @@ import { BRAND_BY_SLUG_QUERY, PROJECTS_BY_BRAND_QUERY } from "../../../../../san
 import { PageBanner } from "@/components/site/division/DivisionSections";
 import { ProjectCard } from "@/components/site/ProjectCard";
 import { isSubsidiarySlug } from "@/lib/brands";
-import { fill, getPageText } from "@/lib/content";
+import { divisionOwner, fill, getPageText } from "@/lib/content";
 import { bannerImage, crumbsFor, divisionPageMetadata } from "@/lib/pageContext";
-import { getProjectThumbnail } from "@/lib/projectHelpers";
+import { getProjectThumbnail, projectImageAlt } from "@/lib/projectHelpers";
 import type { BrandDoc, ProjectDoc } from "@/types/sanity";
+import { describe } from "@/lib/imageAlt";
 
 export async function generateMetadata({ params }: { params: Promise<{ brand: string }> }) {
   const { brand } = await params;
@@ -31,6 +32,7 @@ export default async function SubsidiaryProjectsPage({ params }: { params: Promi
     { label: t?.title ?? "" },
   ]);
 
+  const owner = await divisionOwner(brandSlug, brand.name);
   return (
     <>
       <PageBanner
@@ -41,6 +43,7 @@ export default async function SubsidiaryProjectsPage({ params }: { params: Promi
         heading={t?.title}
         description={fill(t?.description, { division: brand.name })}
         imageUrl={bannerImage(brand)}
+        imageAlt={describe(undefined, owner)}
       />
 
       <section className="py-24">
@@ -59,6 +62,7 @@ export default async function SubsidiaryProjectsPage({ params }: { params: Promi
                     eyebrow: [p.category?.[0], p.location].filter(Boolean).join(" · "),
                     meta: [p.client, p.duration].filter(Boolean).join(" · "),
                     imageUrl: getProjectThumbnail(p, 900, 1200),
+                    imageAlt: projectImageAlt(p, p.coverImage?.alt, owner),
                   }}
                 />
               ))}

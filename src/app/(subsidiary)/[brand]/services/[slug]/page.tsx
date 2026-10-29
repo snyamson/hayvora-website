@@ -7,10 +7,11 @@ import { PageBanner } from "@/components/site/division/DivisionSections";
 import { Reveal } from "@/components/ui/Motion";
 import { PortableText } from "@/components/portable-text/PortableText";
 import { isSubsidiarySlug } from "@/lib/brands";
-import { divisionHref, fill, getPageText, getSiteSettings } from "@/lib/content";
+import { divisionHref, divisionOwner, fill, getPageText, getSiteSettings } from "@/lib/content";
 import { bannerImage, crumbsFor } from "@/lib/pageContext";
 import { buildMetadata } from "@/lib/seo";
 import type { BrandDoc, ServiceDoc } from "@/types/sanity";
+import { describe } from "@/lib/imageAlt";
 
 const fetchService = (slug: string) =>
   safeFetch<ServiceDoc & { description?: unknown }>(SERVICE_BY_SLUG_QUERY, { slug }, ["service", `service:${slug}`]);
@@ -56,6 +57,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
         heading={service.title}
         description={service.shortDescription}
         imageUrl={bannerImage(brand)}
+        imageAlt={describe(undefined, await divisionOwner(brandSlug, brand.name))}
       />
 
       <section className="py-24">

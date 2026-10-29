@@ -6,9 +6,10 @@ import { BRAND_BY_SLUG_QUERY, GALLERY_IMAGES_BY_BRAND_QUERY } from "../../../../
 import { urlFor } from "../../../../../sanity/lib/image";
 import { PageBanner } from "@/components/site/division/DivisionSections";
 import { isSubsidiarySlug } from "@/lib/brands";
-import { fill, getPageText } from "@/lib/content";
+import { divisionOwner, fill, getPageText } from "@/lib/content";
 import { bannerImage, crumbsFor, divisionPageMetadata } from "@/lib/pageContext";
 import type { BrandDoc, SanityImage } from "@/types/sanity";
+import { describe } from "@/lib/imageAlt";
 
 type GalleryGroup = { title: string; coverImage?: SanityImage; images?: (SanityImage & { alt?: string })[] };
 
@@ -32,13 +33,14 @@ export default async function SubsidiaryGalleryPage({ params }: { params: Promis
   const images = (groups ?? []).flatMap((g) => {
     const own = (g.images ?? []).filter((img) => img?.asset);
     const list = own.length > 0 ? own : g.coverImage?.asset ? [g.coverImage as SanityImage & { alt?: string }] : [];
-    return list.map((img) => ({ img, alt: img.alt ?? g.title ?? t?.imageAlt }));
+    return list.map((img) => ({ img, alt: img.alt, title: g.title }));
   });
   const { crumbs, crumbLabel } = await crumbsFor([
     { label: brand.name, href: `/${brandSlug}` },
     { label: t?.title ?? "" },
   ]);
 
+  const owner = await divisionOwner(brandSlug, brand.name);
   return (
     <>
       <PageBanner
@@ -49,6 +51,7 @@ export default async function SubsidiaryGalleryPage({ params }: { params: Promis
         heading={t?.title}
         description={fill(t?.description, { division: brand.name })}
         imageUrl={bannerImage(brand)}
+        imageAlt={describe(undefined, owner)}
       />
 
       <section className="py-24">
@@ -57,11 +60,11 @@ export default async function SubsidiaryGalleryPage({ params }: { params: Promis
             <p className="rounded-[20px] bg-[var(--hv-tint)] p-12 text-center text-lg text-[var(--hv-muted)]">{t?.emptyText}</p>
           ) : (
             <div className="grid grid-cols-2 gap-6 lg:grid-cols-3">
-              {images.map(({ img, alt }, i) => (
+              {images.map(({ img, alt, title }, i) => (
                 <div key={i} className="hv-zoom relative aspect-[4/3]">
                   <Image
                     src={urlFor(img).width(800).height(600).url()}
-                    alt={alt ?? ""}
+                    alt={describe(alt, title, owner) || (t?.imageAlt ?? "")}
                     fill
                     sizes="(min-width: 1024px) 33vw, 50vw"
                     className="object-cover"

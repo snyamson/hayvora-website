@@ -1,6 +1,7 @@
 import { urlFor } from "../../sanity/lib/image";
 import type { PropertyCard } from "@/components/site/home/HomeSections";
 import type { PageTextDoc, PropertyDoc } from "@/types/sanity";
+import { describe, placeOf } from "@/lib/imageAlt";
 
 type PropertyText = NonNullable<PageTextDoc["properties"]>;
 
@@ -33,6 +34,7 @@ export function toPropertyCard(p: PropertyDoc, text: PropertyText | undefined, w
     title: p.title,
     location: [p.location?.city, p.location?.region].filter(Boolean).join(", "),
     imageUrl,
+    imageAlt: describe(p.images?.[0]?.alt, p.title, placeOf(p.location), p.brand?.legalName ?? p.brand?.name),
     status: p.status,
     statusLabel: statusLabel(p.status, text),
     ...(withDetail ? { eyebrow: p.brand?.name, specs: specsLine(p, text) || undefined } : {}),

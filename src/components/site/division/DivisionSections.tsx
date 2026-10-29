@@ -15,6 +15,7 @@ export function PageBanner({
   heading,
   description,
   imageUrl,
+  imageAlt = "",
   short = false,
 }: {
   crumbs: Crumb[];
@@ -23,13 +24,15 @@ export function PageBanner({
   heading?: string;
   description?: string;
   imageUrl?: string;
+  /** What the photo shows; empty only for decoration. */
+  imageAlt?: string;
   short?: boolean;
 }) {
   return (
     <section
       className={`relative overflow-hidden bg-[#0f2a1d] text-white ${short ? "h-[clamp(460px,44vw,560px)]" : "h-[clamp(560px,53vw,760px)]"}`}
     >
-      {imageUrl && <img src={imageUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />}
+      {imageUrl && <img src={imageUrl} alt={imageAlt} className="absolute inset-0 h-full w-full object-cover" />}
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(10,20,16,0.72)_0%,rgba(10,20,16,0.38)_70%)]" />
       <div className="hv-wrap relative flex h-full flex-col justify-end pb-[clamp(56px,7vw,104px)]">
         {crumbs.length > 0 && (

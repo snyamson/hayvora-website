@@ -8,6 +8,7 @@ import { getPageText } from "@/lib/content";
 import { crumbsFor } from "@/lib/pageContext";
 import { buildMetadata } from "@/lib/seo";
 import type { BrandDoc } from "@/types/sanity";
+import { describe } from "@/lib/imageAlt";
 
 const fetchHoldings = () =>
   safeFetch<BrandDoc>(BRAND_BY_SLUG_QUERY, { slug: "holdings" }, ["brand", "brand:holdings"]);
@@ -31,6 +32,7 @@ export default async function HoldingsAboutPage() {
         heading={brand?.name}
         description={brand?.tagline}
         imageUrl={brand?.narrativeImage?.asset ? urlFor(brand.narrativeImage).width(1920).url() : undefined}
+        imageAlt={describe(undefined, brand?.name)}
       />
 
       <section className="py-24">

@@ -6,9 +6,10 @@ import { BRAND_BY_SLUG_QUERY, SERVICES_BY_BRAND_QUERY } from "../../../../../san
 import { PageBanner } from "@/components/site/division/DivisionSections";
 import { LongArrow } from "@/components/site/Icons";
 import { isSubsidiarySlug } from "@/lib/brands";
-import { fill, getPageText } from "@/lib/content";
+import { divisionOwner, fill, getPageText } from "@/lib/content";
 import { bannerImage, crumbsFor, divisionPageMetadata } from "@/lib/pageContext";
 import type { BrandDoc, ServiceDoc } from "@/types/sanity";
+import { describe } from "@/lib/imageAlt";
 
 export async function generateMetadata({ params }: { params: Promise<{ brand: string }> }) {
   const { brand } = await params;
@@ -41,6 +42,7 @@ export default async function SubsidiaryServicesPage({ params }: { params: Promi
         heading={t?.title}
         description={fill(t?.description, { division: brand.name })}
         imageUrl={bannerImage(brand)}
+        imageAlt={describe(undefined, await divisionOwner(brandSlug, brand.name))}
       />
 
       <section className="py-24">

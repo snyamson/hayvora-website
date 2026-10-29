@@ -4,12 +4,15 @@ import { safeFetch } from "../../sanity/lib/client";
 import { SUBSIDIARY_SLUGS } from "@/lib/brands";
 import { absoluteUrl } from "@/lib/seo";
 
-type SitemapRow = { slug?: { current?: string }; brandSlug?: string; _updatedAt?: string };
+type SitemapRow = { slug?: { current?: string }; brandSlug?: string; _updatedAt?: string; images?: (string | null)[] };
 
 const SITEMAP_QUERY = `{
-  "projects": *[_type == "project" && defined(slug.current)]{ slug, _updatedAt, "brandSlug": brand->slug.current },
+  "projects": *[_type == "project" && defined(slug.current)]{
+    slug, _updatedAt, "brandSlug": brand->slug.current,
+    "images": [coverImage.asset->url, hero.image.asset->url] + coalesce(gallery[].asset->url, [])
+  },
   "services": *[_type == "service" && defined(slug.current)]{ slug, _updatedAt, "brandSlug": brand->slug.current },
-  "properties": *[_type == "property" && defined(slug.current)]{ slug, _updatedAt }
+  "properties": *[_type == "property" && defined(slug.current)]{ slug, _updatedAt, "images": images[].asset->url }
 }`;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -42,6 +45,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]);
 
   const lastMod = (row: SitemapRow) => (row._updatedAt ? new Date(row._updatedAt) : now);
+  // A page's photos are listed with it, so Google finds them even before it reads the page.
+  const images = (row: SitemapRow) => {
+    const found = [...new Set((row.images ?? []).filter((url): url is string => !!url))];
+    return found.length > 0 ? { images: found } : {};
+  };
 
   const projectRoutes: MetadataRoute.Sitemap = (data?.projects ?? [])
     .filter((p) => p.slug?.current && p.brandSlug)
@@ -50,6 +58,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: lastMod(p),
       changeFrequency: "monthly",
       priority: 0.7,
+      ...images(p),
     }));
 
   const serviceRoutes: MetadataRoute.Sitemap = (data?.services ?? [])
@@ -68,6 +77,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: lastMod(p),
       changeFrequency: "weekly",
       priority: 0.8,
+      ...images(p),
     }));
 
   return [...staticRoutes, ...brandRoutes, ...projectRoutes, ...serviceRoutes, ...propertyRoutes];

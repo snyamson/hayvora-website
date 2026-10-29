@@ -11,8 +11,9 @@ import { SiteHeader } from "@/components/site/SiteHeader";
 import { getBrandThemeStyle } from "@/lib/brandHelpers";
 import { isSubsidiarySlug } from "@/lib/brands";
 import { getChrome } from "@/lib/chrome";
-import { divisionHref, getDivisionPage } from "@/lib/content";
+import { divisionHref, divisionOwner, getDivisionPage } from "@/lib/content";
 import type { BrandDoc } from "@/types/sanity";
+import { describe } from "@/lib/imageAlt";
 
 export default async function SubsidiaryLayout({
   children,
@@ -57,6 +58,7 @@ export default async function SubsidiaryLayout({
         primary={local(closing?.primaryCta)}
         secondary={local(closing?.secondaryCta)}
         imageUrl={closing?.image?.asset ? urlFor(closing.image).width(1800).url() : undefined}
+        imageAlt={describe(undefined, await divisionOwner(brandSlug, brand?.name))}
       />
       <SiteFooter
         logo={logo}

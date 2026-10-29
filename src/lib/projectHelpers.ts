@@ -1,5 +1,6 @@
 import { fileUrlFor } from "../../sanity/lib/file";
 import { urlFor } from "../../sanity/lib/image";
+import { describe } from "@/lib/imageAlt";
 import type { ProjectDoc } from "@/types/sanity";
 
 export type ProjectHero =
@@ -34,6 +35,11 @@ export function getProjectHero(project: ProjectDoc | undefined): ProjectHero | u
 
   const cover = imageUrl(project.coverImage, 1600, 900);
   return cover ? { type: "image", imageUrl: cover } : undefined;
+}
+
+/** What a project's photo shows: its own Alt text, else the project, its place and the division it is by. */
+export function projectImageAlt(project: Pick<ProjectDoc, "title" | "location" | "brand">, alt?: unknown, owner?: string) {
+  return describe(alt, project.title, project.location, owner ?? project.brand?.legalName ?? project.brand?.name);
 }
 
 /** Thumbnail for cards and grids — always the cover image, never the hero. */

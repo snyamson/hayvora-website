@@ -9,9 +9,9 @@ import { PageBanner } from "@/components/site/division/DivisionSections";
 import { Reveal } from "@/components/ui/Motion";
 import { PortableText } from "@/components/portable-text/PortableText";
 import { isSubsidiarySlug } from "@/lib/brands";
-import { divisionHref, fill, getPageText, getSiteSettings } from "@/lib/content";
+import { divisionHref, divisionOwner, fill, getPageText, getSiteSettings } from "@/lib/content";
 import { crumbsFor } from "@/lib/pageContext";
-import { getProjectHero } from "@/lib/projectHelpers";
+import { getProjectHero, projectImageAlt } from "@/lib/projectHelpers";
 import { buildMetadata, ogImageUrl } from "@/lib/seo";
 import type { BrandDoc, ProjectDoc } from "@/types/sanity";
 
@@ -59,6 +59,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
     { label: project.title },
   ]);
 
+  const owner = await divisionOwner(brandSlug, project.brand?.name);
   return (
     <>
       <PageBanner
@@ -69,6 +70,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
         heading={project.title}
         description={project.summary}
         imageUrl={project.coverImage?.asset ? urlFor(project.coverImage).width(1920).url() : undefined}
+        imageAlt={projectImageAlt(project, project.coverImage?.alt, owner)}
       />
 
       <section className="py-24">
@@ -90,7 +92,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
               ) : (
                 <Image
                   src={hero.imageUrl}
-                  alt={project.title}
+                  alt={projectImageAlt(project, project.hero?.image?.alt ?? project.coverImage?.alt, owner)}
                   fill
                   sizes="(min-width: 1024px) 60rem, 100vw"
                   loading="eager"
@@ -119,7 +121,7 @@ export default async function ProjectDetailPage({ params }: { params: Promise<{ 
             <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3">
               {project.gallery.map((img, i) => (
                 <div key={i} className="hv-zoom relative aspect-square">
-                  <Image src={urlFor(img).width(500).height(500).url()} alt={img.alt ?? ""} fill sizes="(min-width: 640px) 18rem, 45vw" className="object-cover" />
+                  <Image src={urlFor(img).width(500).height(500).url()} alt={projectImageAlt(project, img.alt, owner)} fill sizes="(min-width: 640px) 18rem, 45vw" className="object-cover" />
                 </div>
               ))}
             </div>

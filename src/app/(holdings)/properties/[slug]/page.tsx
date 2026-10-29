@@ -13,6 +13,7 @@ import { crumbsFor } from "@/lib/pageContext";
 import { statusLabel } from "@/lib/propertyCards";
 import { buildMetadata, ogImageUrl } from "@/lib/seo";
 import type { PropertyDoc } from "@/types/sanity";
+import { describe } from "@/lib/imageAlt";
 
 const fetchProperty = (slug: string) =>
   safeFetch<PropertyDoc & { description?: unknown }>(PROPERTY_BY_SLUG_QUERY, { slug }, ["property", `property:${slug}`]);
@@ -73,6 +74,7 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
         heading={property.title}
         description={where || undefined}
         imageUrl={cover?.asset ? urlFor(cover).width(1920).url() : undefined}
+        imageAlt={describe(cover?.alt, property.title, where, property.brand?.legalName ?? property.brand?.name)}
       />
 
       <section className="py-24">
@@ -82,7 +84,7 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
               <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg">
                 <Image
                   src={urlFor(cover).width(1200).height(900).url()}
-                  alt={property.title}
+                  alt={describe(cover?.alt, property.title, where, property.brand?.legalName ?? property.brand?.name)}
                   fill
                   sizes="(min-width: 1024px) 60vw, 100vw"
                   loading="eager"
@@ -113,7 +115,7 @@ export default async function PropertyDetailPage({ params }: { params: Promise<{
               <div className="mt-10 grid grid-cols-3 gap-3">
                 {property.images.slice(1).map((img, i) => (
                   <div key={i} className="hv-zoom relative aspect-square">
-                    <Image src={urlFor(img).width(400).height(400).url()} alt="" fill sizes="20vw" className="object-cover" />
+                    <Image src={urlFor(img).width(400).height(400).url()} alt={describe(img.alt, property.title, where, property.brand?.legalName ?? property.brand?.name)} fill sizes="20vw" className="object-cover" />
                   </div>
                 ))}
               </div>
