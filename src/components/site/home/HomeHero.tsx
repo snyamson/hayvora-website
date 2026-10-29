@@ -48,6 +48,7 @@ export function HomeHero({
       {media?.type === "video" && (
         <video
           src={media.videoUrl}
+          poster={media.posterUrl}
           autoPlay
           muted
           loop
